@@ -11,10 +11,13 @@ Release:	10
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
+# Source0-md5:	98b3bf022233035ce12a834c689605e5
 Source1:	%{name}.cnv.tgz
+# Source1-md5:	00add1da5f8e624c5c1d8d1b3351616a
 Source2:	nwserv.init
 Source3:	nwserv.logrotate
 Source4:	pipefs-scripts.tgz
+# Source4-md5:	940ec1baaea874d0c422eb0435a7b235
 Patch0:		%{name}.patch
 Patch1:		%{name}-rwlck.patch
 Patch2:		%{name}-clean.patch
