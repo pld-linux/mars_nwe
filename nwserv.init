@@ -46,6 +46,12 @@ case "$1" in
 	if [ -f /var/lock/subsys/nwserv ]; then
 		msg_stopping "MARS NetWare"
 		killproc nwserv
+		msg_stopping "MARS ncpserv"
+		killproc ncpserv
+		msg_stopping "MARS binder"
+		killproc nwbind
+		msg_stopping "MARS stopping all connections"
+		killproc nwconn
 		rm -f /var/lock/subsys/nwserv >/dev/null 2>&1
 	else
 		msg_Not_Running MARS NetWare
