@@ -10,8 +10,6 @@ Version:	0.99.pl20
 Release:	8
 License:	GPL
 Group:		Networking/Daemons
-Group(de):	Netzwerkwesen/Server
-Group(pl):	Sieciowe/Serwery
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
 Source1:	%{name}.cnv.tgz
 Source2:	nwserv.init
