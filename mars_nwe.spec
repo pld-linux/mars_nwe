@@ -14,7 +14,7 @@ Source3:     nwserv.log
 Patch0:      mars_nwe.patch
 Group:       Networking/Daemons
 Prereq:      /sbin/chkconfig
-Buildroot:   /tmp/%{name}-%{version}-root
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
 MARS is a NetWare compatible file and printer server. It lets you use
