@@ -29,10 +29,10 @@ Patch7:		%{name}-buffer.patch
 Patch8:		%{name}-glibc21.patch
 Patch9:		%{name}-format.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
-Prereq:		rc-scripts
-Prereq:		/sbin/chkconfig
-Obsoletes:	mars-nwe
+PreReq:		rc-scripts
+Requires(post,preun):	/sbin/chkconfig
 Requires:	ipxutils
+Obsoletes:	mars-nwe
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/nwserv
