@@ -10,7 +10,7 @@ Copyright:	GPL
 Source0:	ftp://ftp.gwdg.de/pub/linux/misc/ncpfs/mars_nwe-%{version}.tgz
 Source1:	mars_nwe.cnv.tgz
 Source2:	nwserv.init
-Source3:	nwserv.log
+Source3:	nwserv.logrotate
 Source4:	pipefs-scripts.tgz
 Patch0:		mars_nwe-0.99.pl14.gz
 Patch1:		mars_nwe.patch
@@ -81,7 +81,7 @@ done
 ln -s nwserv.cnv.437 $RPM_BUILD_ROOT/etc/nwserv/nwserv.cnv
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv.init
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/nwserv.log
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/nwserv
 
 tar -xzf %{SOURCE4} -C $RPM_BUILD_ROOT/var/state/nwserv/pipe
 
@@ -131,7 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.stations
 %attr(644,root,root) /etc/nwserv/nwserv.cnv*
 %attr(754,root,root) %config /etc/rc.d/init.d/nwserv.init
-%attr(600,root,root) %config /etc/logrotate.d/nwserv.log 
+%attr(600,root,root) %config /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
 %attr(644,root,root) /var/state/nwserv/sys/public/comm.exe
 %attr(644,root,root) /var/state/nwserv/sys/public/sources/*
