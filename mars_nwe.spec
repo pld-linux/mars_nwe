@@ -114,20 +114,10 @@ done
 gzip -9nf README doc/* examples/README.important
 
 %post
-/sbin/chkconfig --add nwserv
-if [ -f /var/lock/subsys/nwserv ]; then
-	/etc/rc.d/init.d/nwserv restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/nwserv start\" to start MARS NetWare daemon."
-fi
+NAME=nwserv; DESC="MARS NetWare daemon"; %chkconfig_add
 
 %preun
-if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/nwserv ]; then
-		/etc/rc.d/init.d/nwserv stop 1>&2
-	fi
-	/sbin/chkconfig --del nwserv
-fi
+NAME=nwserv; %chkconfig_del
 
 %clean
 rm -rf $RPM_BUILD_ROOT
