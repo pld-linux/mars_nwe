@@ -34,7 +34,7 @@ diff -ruN mars_nwe/examples/config.h mars_nwe.new/examples/config.h
                                       /* full name of ini (conf) file       */
  # define PATHNAME_PROGS   "/usr/sbin" /* where to find the executables     */
 -# define PATHNAME_BINDERY "/var/nwserv/db"  /* directory for bindery-files        */
-+# define PATHNAME_BINDERY "/var/nwserv/bindery"  /* directory for bindery-files        */
++# define PATHNAME_BINDERY "/var/state/nwserv/bindery"  /* directory for bindery-files        */
  #endif
  
  #define PATHNAME_PIDFILES "/var/run" /* directory for 'pidfiles'           */
@@ -55,7 +55,7 @@ diff -ruN mars_nwe/examples/mk.li mars_nwe.new/examples/mk.li
  #    CFLAGS="-pipe -O2 -fomit-frame-pointer"
  #    problems gcc2.5.8 ^^^^^^^^^^^^^^^^^^^^^
 -     CFLAGS="-pipe -Wall"
-+     CFLAGS="$OPT_FLAGS -pipe -Wall -D_GNU_SOURCE -Dsignal=sysv_signal"
++     CFLAGS="$RPM_OPT_FLAGS -pipe -Wall -D_GNU_SOURCE -Dsignal=sysv_signal"
  
    case $MASCHINE in
      sparc)
@@ -67,8 +67,8 @@ diff -ruN mars_nwe/examples/nw.ini mars_nwe.new/examples/nw.ini
  #       1       FAXQ            /var/spool/fax/faxqueue k
  
 -        1       SYS             /u3/SYS/                kt   711 600
-+1	SYS		/var/nwserv/sys		kt	-1
-+1	PIPE		/var/nwserv/pipe	kp
++1	SYS		/var/state/nwserv/sys		kt	-1
++1	PIPE		/var/state/nwserv/pipe	kp
 +1	CDROM		/mnt/cdrom		kmnor
 +1	HOME		~			k	-1
  
@@ -133,7 +133,7 @@ diff -ruN mars_nwe/examples/nw.ini mars_nwe.new/examples/nw.ini
  #
  #  45 = path for bindery file's
 -45  /var/nwserv/db
-+45  /var/nwserv/bindery
++45  /var/state/nwserv/bindery
  #  46 = path for attribute handling
  46  /var/nwserv/attrib
  #  47 = path for trustee handling
