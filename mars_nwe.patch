@@ -1,0 +1,217 @@
+diff -ruN mars_nwe/emutli.c mars_nwe.new/emutli.c
+--- mars_nwe/emutli.c	Thu Jul 23 19:30:20 1998
++++ mars_nwe.new/emutli.c	Sat Nov 14 20:27:56 1998
+@@ -42,7 +42,7 @@
+ #include <errno.h>
+ 
+ #ifndef DO_IPX_SEND_TEST 
+-# define DO_IPX_SEND_TEST 2
++# define DO_IPX_SEND_TEST 0
+ #endif
+ 
+ /* DO_IPX_SEND_TEST is only needed if the ipx sendmsg() bug is not patched
+diff -ruN mars_nwe/emutli.h mars_nwe.new/emutli.h
+--- mars_nwe/emutli.h	Sat Jul 11 20:48:59 1998
++++ mars_nwe.new/emutli.h	Sat Nov 14 20:27:56 1998
+@@ -33,7 +33,7 @@
+ # define IPX_RT_BLUEBOOK	ETHERTYPE_IPX
+  int  ipx_iffind(char *ifname,struct ipx_addr *addr);
+ #else
+-# include <linux/ipx.h>
++# include <netipx/ipx.h>
+ #endif
+ 
+ typedef unsigned char       uint8;
+diff -ruN mars_nwe/examples/config.h mars_nwe.new/examples/config.h
+--- mars_nwe/examples/config.h	Sat Jul 11 20:35:54 1998
++++ mars_nwe.new/examples/config.h	Sun Nov 15 01:18:15 1998
+@@ -11,10 +11,10 @@
+ # define PATHNAME_PROGS   "."        /* where to find the executables      */
+ # define PATHNAME_BINDERY "."        /* directory for bindery-files        */
+ #else
+-# define FILENAME_NW_INI  "/etc/nwserv.conf"
++# define FILENAME_NW_INI  "/etc/nwserv/nwserv.conf"
+                                      /* full name of ini (conf) file       */
+ # define PATHNAME_PROGS   "/usr/sbin" /* where to find the executables     */
+-# define PATHNAME_BINDERY "/var/nwserv/db"  /* directory for bindery-files        */
++# define PATHNAME_BINDERY "/var/nwserv/bindery"  /* directory for bindery-files        */
+ #endif
+ 
+ #define PATHNAME_PIDFILES "/var/run" /* directory for 'pidfiles'           */
+@@ -82,6 +82,6 @@
+ /* <---------------  next is for linux only ---------------------------->  */
+ #define INTERNAL_RIP_SAP    1        /* use internal/own rip/sap routines  */
+ 
+-#define SHADOW_PWD          0        /* change to '1' for shadow passwds   */
+-#define QUOTA_SUPPORT       0        /* change to '1' for quota support    */
++#define SHADOW_PWD          1        /* change to '1' for shadow passwds   */
++#define QUOTA_SUPPORT       1        /* change to '1' for quota support    */
+ 
+diff -ruN mars_nwe/examples/mk.li mars_nwe.new/examples/mk.li
+--- mars_nwe/examples/mk.li	Sat Jul 11 20:38:04 1998
++++ mars_nwe.new/examples/mk.li	Sat Nov 14 20:27:56 1998
+@@ -43,7 +43,7 @@
+      CPP="cc -E"
+ #    CFLAGS="-pipe -O2 -fomit-frame-pointer"
+ #    problems gcc2.5.8 ^^^^^^^^^^^^^^^^^^^^^
+-     CFLAGS="-pipe -Wall"
++     CFLAGS="$OPT_FLAGS -pipe -Wall -D_GNU_SOURCE -Dsignal=sysv_signal"
+ 
+   case $MASCHINE in
+     sparc)
+diff -ruN mars_nwe/examples/nw.ini mars_nwe.new/examples/nw.ini
+--- mars_nwe/examples/nw.ini	Tue Sep 29 15:48:36 1998
++++ mars_nwe.new/examples/nw.ini	Sun Nov 15 01:18:52 1998
+@@ -150,7 +150,10 @@
+ #       1       WORLD           /var/world              kiO  777 666
+ #       1       FAXQ            /var/spool/fax/faxqueue k
+ 
+-        1       SYS             /u3/SYS/                kt   711 600
++1	SYS		/var/nwserv/sys		kt	-1
++1	PIPE		/var/nwserv/pipe	kp
++1	CDROM		/mnt/cdrom		kmnor
++1	HOME		~			k	-1
+ 
+ 
+ # =========================================================================
+@@ -447,7 +450,7 @@
+ # Volumes depended values can be set in section 1.
+ # 9 -1 0640
+ #
+-9 0751  0640
++9 0755  0664
+ 
+ # Section 10: UID and GID with minimal rights
+ # =========================================================================
+@@ -481,8 +484,8 @@
+ #       10      65534
+ #       11      65534
+ 
+-        10      65534
+-        11      65534
++        10      99
++        11      99
+ 
+ 
+ # =========================================================================
+@@ -531,7 +534,7 @@
+ # Example:
+ #       12      SUPERVISOR      nw-adm          top-secret
+ 
+-12  SUPERVISOR   root
++12	SUPERVISOR	root	top-secret
+ 
+ 
+ # =========================================================================
+@@ -567,6 +570,7 @@
+ #       13  COMMON    common        gast    0x1  # no password change by user.
+ #       13  COMMON    common                0x1  # syntax is allowed too.
+ 
++13	GUEST	nobody	-	0x1
+ 
+ # Section 14: currently not used
+ 
+@@ -697,6 +701,8 @@
+ #       21      FAXPRINT  -  /usr/bin/psfaxprn /var/spool/fax/faxqueue
+ # -------------------------------------------------------------------------
+ 
++21	LP	SYS:/PRINT/LP	lpr
++21	LP_PS
+ 
+ # =========================================================================
+ # Section 22: print server entries (optional)
+@@ -713,6 +719,7 @@
+ # Examples:
+ #       22	PS1	OCTOPUSS
+ 
++22	PS_NWE	LP_PS	1
+ 
+ # =========================================================================
+ # Section 30: Burst mode values (optional)
+@@ -738,7 +745,7 @@
+ #
+ #
+ #  45 = path for bindery file's
+-45  /var/nwserv/db
++45  /var/nwserv/bindery
+ #  46 = path for attribute handling
+ 46  /var/nwserv/attrib
+ #  47 = path for trustee handling
+@@ -760,6 +767,7 @@
+ # Examples:
+ #       50     /etc/nwserv.cnv
+ 
++50	/etc/nwserv/nwserv.cnv
+ 
+ # Changing defaults from config.h
+ # more information in config.h
+@@ -804,7 +812,7 @@
+ #201     syslog          # if filename == syslog then syslogd will be used for
+                         # all messages
+ 
+-202     0x1             # flag in hex notation
++202     0x0             # flag in hex notation
+                         #   0x0=append all messages to logfile.
+                         # & 0x1=creat new logfile instead of appending.
+ #202    0x3             # & 0x2=use syslogd for error messages instead of logfile.
+@@ -825,7 +833,7 @@
+                         # ( normally minutes )
+ 301     /var/log/nw.routes #  filename of logfile
+ 
+-302     0x1             # flags will be interpreted as hex value.
++302     0x0             # flags will be interpreted as hex value.
+                         #     0 = append to this file
+                         # & 0x1 = creat new routing info file
+                         # & 0x2 = split info into several files
+@@ -839,7 +847,7 @@
+ # Section 400:
+ # station file for special handling of stations.
+ 
+-400  /etc/nwserv.stations  # for syntax see file in the examples directory.
++400  /etc/nwserv/nwserv.stations  # for syntax see file in the examples directory.
+ 
+ 
+ # Section 401: nearest server
+diff -ruN mars_nwe/net.h mars_nwe.new/net.h
+--- mars_nwe/net.h	Sat Jul 11 21:44:48 1998
++++ mars_nwe.new/net.h	Sat Nov 14 20:27:56 1998
+@@ -25,9 +25,13 @@
+ #include <sys/types.h>  /* moved 12-May-98 0.99.pl9 */
+ 
+ /* we want sysv signal handling, used for glibc */
+-#define _XOPEN_SOURCE 
++#ifndef _XOPEN_SOURCE
++#  define _XOPEN_SOURCE  
++#endif
+ /* perhaps this define is better */
+-#define __USE_XOPEN
++#ifndef __USE_XOPEN
++#  define __USE_XOPEN 
++#endif
+ 
+ #include <signal.h>
+ #include <string.h>
+diff -ruN mars_nwe/nwvolume.c mars_nwe.new/nwvolume.c
+--- mars_nwe/nwvolume.c	Sat Jul 11 21:10:15 1998
++++ mars_nwe.new/nwvolume.c	Sat Nov 14 20:27:56 1998
+@@ -768,7 +768,7 @@
+ # ifndef QTAINSYS
+ #  include <linux/quota.h>
+ # else /* probably used for libc6 */
+-/* #  include <asm/types.h>  ?? */
++#  include <asm/types.h>
+ #  include <sys/quota.h>
+ # endif
+ 
+diff -ruN mars_nwe/tools.c mars_nwe.new/tools.c
+--- mars_nwe/tools.c	Wed Oct 21 14:06:45 1998
++++ mars_nwe.new/tools.c	Sat Nov 14 20:27:56 1998
+@@ -39,7 +39,7 @@
+ int    act_connection=0;  /* which connection (nwconn, nwbind) */
+ time_t act_time=0L;       /* actual time */
+ 
+-static FILE *logfile=stderr;
++static FILE *logfile=_IO_stderr;
+ static int   use_syslog=0; /* 1 = use syslog for all loggings
+                             * 2 = only for errors
+                             */
