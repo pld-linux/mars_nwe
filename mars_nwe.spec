@@ -182,6 +182,7 @@ fi
 %attr(600,root,root) %config /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
 %attr(644,root,root) /var/lib/nwserv/sys/public/comm.exe
+%attr(644,root,root) /var/lib/nwserv/sys/public/comm32.exe
 %attr(644,root,root) /var/lib/nwserv/sys/public/sources/*
 %attr(755,root,root) /var/lib/nwserv/pipe/*
 %attr(600,root,root) %ghost /var/log/*
