@@ -1,0 +1,10 @@
+--- mars_nwe/emutli1.c.glibc21	Thu May  7 05:32:52 1998
++++ mars_nwe/emutli1.c	Mon May 24 10:27:55 1999
+@@ -33,7 +33,6 @@
+ #include <sys/time.h>
+ #include <sys/socket.h>
+ #include <sys/ioctl.h>
+-#include <linux/config.h>
+ #if 0
+ # include <linux/sockios.h>
+ #endif

@@ -1,0 +1,187 @@
+--- mars_nwe/connect.c.buffer	Sat Apr 15 16:02:58 2000
++++ mars_nwe/connect.c	Sat Jun 10 16:19:53 2000
+@@ -779,7 +779,8 @@
+                                uint8 *fn,
+                                int   *has_wild,
+                                uint8 *data,
+-                               int   len)
++                               int   len,
++			       int   lenn)
+ 
+ /* is called from build_path  */
+ {
+@@ -839,7 +840,7 @@
+                      (only_dir) ? (uint8)NULL
+                                 : path->fn,
+                      &(path->has_wild),
+-                     data, len);
++                     data, len, sizeof(path->fn));
+ 
+   path->volume = -1;
+   if (only_dir) path->fn[0] = '\0';
+@@ -1881,7 +1882,7 @@
+         entry8_flags = hextoi((char*)buff);
+       } else if (what == 9) { /* umode */
+         uint8 buf1[300], buf2[300];
+-        if (2 == sscanf((char*)buff, "%s %s", buf1, buf2)) {
++        if (2 == sscanf((char*)buff, "%300s %300s", buf1, buf2)) {
+           default_umode_dir  = octtoi(buf1);
+           default_umode_file = octtoi(buf2);
+         }
+--- mars_nwe/nameos2.c.buffer	Sun Aug  3 15:53:34 1997
++++ mars_nwe/nameos2.c	Sat Jun 10 16:17:28 2000
+@@ -116,7 +116,7 @@
+ }
+ #endif
+ 
+-void mangle_os2_name(NW_VOL *vol, uint8 *unixname, uint8 *pp)
++void mangle_os2_name(NW_VOL *vol, uint8 *unixname, uint8 *pp, int len)
+ {
+ #if MAX_NAME_OS2_CACHE
+   int     k           = -1;
+@@ -149,7 +149,7 @@
+       new_str(b->cache[0], pp);
+     }
+   } else {
+-    strcpy(pp, b->cache[besthit]);
++    strncpy(pp, b->cache[besthit], len-1);
+     if (besthit > 2) {
+       uint8 *sp=b->cache[besthit];
+       while (besthit--) {
+--- mars_nwe/namspace.c.buffer	Fri Apr 21 10:08:19 2000
++++ mars_nwe/namspace.c	Sat Jun 10 16:21:02 2000
+@@ -639,7 +639,7 @@
+           if (nwpath->namespace == NAME_OS2) {
+             dos2unixcharset(pp);
+             pp += npbeg;
+-            mangle_os2_name(v, unixname, pp);
++            mangle_os2_name(v, unixname, pp, sizeof(unixname)-v->unixnamlen-npbeg);
+             if (nplen > 0) {
+               unix2doscharset(pp);
+               memcpy(nwpath->path+npbeg, pp, nplen);
+--- mars_nwe/nwattrib.c.buffer	Sun May 24 13:06:56 1998
++++ mars_nwe/nwattrib.c	Sat Jun 10 16:17:28 2000
+@@ -33,7 +33,7 @@
+   int    l;
+   uint8  buf_uc[4];
+   U32_TO_BE32(inode, buf_uc);
+-  l=sprintf(buf, "%s/%x/%x/%x/%x", path_attributes,
++  l=snprintf(buf, sizeof(buf), "%s/%x/%x/%x/%x", path_attributes,
+             dev,
+             (int) buf_uc[0],
+             (int) buf_uc[1],
+@@ -52,7 +52,7 @@
+   char   buf[255];
+   uint8  buf_uc[4];
+   U32_TO_BE32(inode, buf_uc);
+-  sprintf(buf, "%s/%x/%x/%x/%x/%x", path_attributes,
++  snprintf(buf, sizeof(buf), "%s/%x/%x/%x/%x/%x", path_attributes,
+             dev,
+             (int) buf_uc[0],
+             (int) buf_uc[1],
+@@ -71,7 +71,7 @@
+   int    l;
+   uint8  buf_uc[4];
+   U32_TO_BE32(inode, buf_uc);
+-  sprintf(buf, "%s/%x/%x/%x/%x/%x", path_attributes,
++  snprintf(buf, sizeof(buf), "%s/%x/%x/%x/%x/%x", path_attributes,
+             dev,
+             (int) buf_uc[0],
+             (int) buf_uc[1],
+--- mars_nwe/nwbind.c.buffer	Tue Apr 25 17:16:39 2000
++++ mars_nwe/nwbind.c	Sat Jun 10 16:17:28 2000
+@@ -667,7 +667,7 @@
+                      } *xdata = (struct XDATA*) responsedata;
+                      int k, i, h;
+                      memset(xdata, 0, sizeof(struct XDATA));
+-                     strcpy(xdata->servername, my_nwname);
++                     strncpy(xdata->servername, my_nwname, sizeof(xdata->servername)-1);
+                      if (!tells_server_version) {
+                        xdata->version    =  2;
+                        xdata->subversion = 15;
+--- mars_nwe/nwdbm.c.buffer	Tue Apr 25 17:46:21 2000
++++ mars_nwe/nwdbm.c	Sat Jun 10 16:17:28 2000
+@@ -2445,7 +2445,7 @@
+                 pp=directory;
+                 state++;
+               } else if (state==3) {
+-                strcpy(command, p-1);
++                strncpy(command, p-1, sizeof(command)-1);
+                 break;
+               }
+             }
+--- mars_nwe/nwfile.c.buffer	Tue Apr 25 12:30:22 2000
++++ mars_nwe/nwfile.c	Sat Jun 10 16:17:28 2000
+@@ -756,7 +756,7 @@
+ {
+   if (NULL == fh->f) {
+     char pipecommand[512];
+-    sprintf(pipecommand, "%s %s %d %d",
++    snprintf(pipecommand, sizeof(pipecommand), "%s %s %d %d",
+                         fh->fname,
+                         dowrite ? "WRITE" : "READ",
+                         act_connection, act_pid);
+--- mars_nwe/nwqconn.c.buffer	Wed Sep 15 14:53:20 1999
++++ mars_nwe/nwqconn.c	Sat Jun 10 16:17:28 2000
+@@ -213,7 +213,7 @@
+         FILE *f=NULL;
+         if (prc_len && *(prc+prc_len-1)=='!'){
+           strmaxcpy((uint8*)buff, prc, prc_len-1);
+-          sprintf(printcommand, "%s %s %s", buff,
++          snprintf(printcommand, sizeof(printcommand), "%s %s %s", buff,
+              qpa.banner_user_name, qpa.banner_file_name);
+         } else
+           strmaxcpy((uint8*)printcommand, prc, prc_len);
+--- mars_nwe/nwserv.c.buffer	Thu Jul 30 15:45:16 1998
++++ mars_nwe/nwserv.c	Sat Jun 10 16:17:28 2000
+@@ -851,7 +851,7 @@
+       char inhalt4[500];
+       char dummy;
+       int  anz;
+-      if ((anz=sscanf((char*)buff, "%s %s %s %s", inhalt, inhalt2,
++      if ((anz=sscanf((char*)buff, "%500s %500s %500s %500s", inhalt, inhalt2,
+                                                 inhalt3, inhalt4)) >  0) {
+          switch (what) {
+            case 2 : if (full) {
+@@ -1287,7 +1287,7 @@
+               int    frame=-1;
+               uint32 netnum=0L;
+               char buf[256];
+-              strcpy(buf, argv[j+2]);
++              strncpy(buf, argv[j+2], sizeof(buf)-1);
+               upstr(buf);
+               if (!strcmp(buf, "802.3"))
+                 frame=IPX_FRAME_8023;
+--- mars_nwe/nwvolume.c.buffer	Wed Nov 17 19:15:32 1999
++++ mars_nwe/nwvolume.c	Sat Jun 10 16:17:28 2000
+@@ -144,7 +144,7 @@
+       uint8 umode_filestr[256];
+       uint8 *p;
+       int   len;
+-      int   founds = sscanf((char*)buff, "%s %s %s %s %s",
++      int   founds = sscanf((char*)buff, "%256s %256s %256s %256s %256s",
+                  sysname, unixname, optionstr, umode_dirstr, umode_filestr);
+       if (founds > 1) {
+         NW_VOL *vol=&(nw_volumes[used_nw_volumes]);
+--- mars_nwe/unxfile.c.buffer	Mon Sep  6 16:52:07 1999
++++ mars_nwe/unxfile.c	Sat Jun 10 16:17:28 2000
+@@ -105,7 +105,7 @@
+   if (!stat(newname, &statb)) return(EEXIST);
+   if (stat(oldname,  &statb)) return(-1);
+   else if (!S_ISDIR(statb.st_mode)) return(-1);
+-  sprintf(command, "mv %s %s 2>&1 >/dev/null" , oldname, newname);
++  snprintf(command, sizeof(command)-1, "mv %s %s 2>&1 >/dev/null" , oldname, newname);
+   return(system(command));
+ }
+ #endif
+--- mars_nwe/nameos2.h.buffer	Thu Aug  8 11:49:52 1996
++++ mars_nwe/nameos2.h	Sat Jun 10 16:17:28 2000
+@@ -7,7 +7,7 @@
+ #define _NAMEOS2_H_
+ #if WITH_NAME_SPACE_CALLS
+ 
+-extern void mangle_os2_name(NW_VOL *vol, uint8 *unixname, uint8 *pp);
++extern void mangle_os2_name(NW_VOL *vol, uint8 *unixname, uint8 *pp, int len);
+ extern int fn_os2_match(uint8 *s, uint8 *p, int soptions);
+ 
+ #endif

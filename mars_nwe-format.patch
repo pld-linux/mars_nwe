@@ -1,0 +1,20 @@
+--- mars_nwe/tools.c.format	Fri Jan 19 14:58:27 2001
++++ mars_nwe/tools.c	Fri Jan 19 14:58:53 2001
+@@ -189,7 +189,7 @@
+         sprintf(identstr, "%s %d %3d", get_debstr(0),
+                            act_connection, act_ncpsequence);
+         openlog(identstr, LOG_CONS, LOG_DAEMON);
+-        syslog(LOG_DEBUG, buf);
++        syslog(LOG_DEBUG, "%s", buf);
+         closelog();
+       } else {
+         int l=strlen(buf);
+@@ -249,7 +249,7 @@
+     }
+     sprintf(identstr, "%s %d %3d", get_debstr(0), act_connection, act_ncpsequence);
+     openlog(identstr, LOG_CONS, LOG_DAEMON);
+-    syslog(prio, buf);
++    syslog(prio, "%s", buf);
+     closelog();
+     if (!mode) return;
+     lologfile=stderr;
