@@ -61,11 +61,11 @@ cd ..
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{nwserv,rc.d/init.d,logrotate.d}
-install -d $RPM_BUILD_ROOT/usr/sbin
+install -d $RPM_BUILD_ROOT%{_sbindir}
 install -d $RPM_BUILD_ROOT/var/nwserv/{sys/{public/sources,login,system,mail},pipe,bindery,attrib,trustees}
 install -d $RPM_BUILD_ROOT/var/{run,log,spool/nwserv/{.volcache,.locks}}
 
-install -s {nwserv,nwconn,ncpserv,nwclient,nwbind,nwrouted} $RPM_BUILD_ROOT/usr/sbin
+install -s {nwserv,nwconn,ncpserv,nwclient,nwbind,nwrouted} $RPM_BUILD_ROOT%{_sbindir}
 
 touch $RPM_BUILD_ROOT/var/log/nw.log
 touch $RPM_BUILD_ROOT/var/log/nw.routes
@@ -119,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(644, root, root) /etc/nwserv/nwserv.cnv*
 %attr(700, root, root) %config /etc/rc.d/init.d/nwserv.init
 %attr(600, root, root) %config /etc/logrotate.d/nwserv.log 
-%attr(700, root, root) /usr/sbin/*
+%attr(700, root, root) %{_sbindir}/*
 %attr(644, root, root) /var/nwserv/sys/public/comm.exe
 %attr(644, root, root) /var/nwserv/sys/public/sources/*
 %attr(755, root, root) /var/nwserv/pipe/*
