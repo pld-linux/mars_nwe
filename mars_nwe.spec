@@ -189,7 +189,7 @@ fi
 %attr(600,root,root) %verify(not md5 mtime) %config %{_sysconfdir}/nwserv.stations
 %attr(644,root,root) %{_sysconfdir}/nwserv.cnv*
 %attr(754,root,root) %config /etc/rc.d/init.d/nwserv
-%attr(600,root,root) %config /etc/logrotate.d/nwserv
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
 %attr(644,root,root) /var/lib/nwserv/sys/public/comm.exe
 %attr(644,root,root) /var/lib/nwserv/sys/public/comm32.exe
