@@ -16,31 +16,35 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
+# Get network config
+. /etc/sysconfig/network
+ 
 # Get service config - may override defaults
 [ -f /etc/sysconfig/nwserv ] && . /etc/sysconfig/nwserv
 
 # Check that networking is up.
 if is_no "${NETWORKING}"; then
-	msg_Network_Down MARS NetWare
+	msg_Network_Down "MARS NetWare"
 	exit 1
 fi
 
+case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/nwserv ]; then
-		msg_starting MARS NetWare
+		msg_starting "MARS NetWare"
 		daemon nwserv
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/nwserv
 	else
-		msg_Already_Running MARS NetWare
+		msg_Already_Running "MARS NetWare"
 		exit 1
 	fi
         ;;
   stop)
         # Stop daemons.
 	if [ -f /var/lock/subsys/nwserv ]; then
-		msg_stopping MARS NetWare
+		msg_stopping "MARS NetWare"
 		killproc nwserv
 		rm -f /var/lock/subsys/nwserv >/dev/null 2>&1
 	else
@@ -54,14 +58,11 @@ fi
         ;;
   reload)
 	if [ -f /var/lock/subsys/nwserv ]; then
-		msg_show MARS NetWare
-		msg_reload
+		msg_reloading "MARS NetWare"
 		busy
 		killproc nwserv -HUP
-		deltext
-		ok
 	else
-		msg_Not_Running MARS NetWare
+		msg_Not_Running "MARS NetWare"
 		exit 1
 	fi
 	;;
