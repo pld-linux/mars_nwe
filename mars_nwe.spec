@@ -16,7 +16,7 @@ Source4:	pipefs-scripts.tgz
 Patch0:		mars_nwe.patch
 Group:		Networking/Daemons
 Prereq:		/sbin/chkconfig
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 MARS is a NetWare compatible file and printer server. It lets you use
