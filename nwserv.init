@@ -14,7 +14,11 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-[ -x /usr/sbin/nwserv ] || exit 0
+# Check that networking is up.
+if [ "${NETWORKING}" = "no" ]; then
+	echo "WARNING: Networking is down. Nwserv service can't be runed."
+	exit 1
+fi
 
 # See how we were called.
 case "$1" in
