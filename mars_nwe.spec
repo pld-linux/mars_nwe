@@ -96,7 +96,7 @@ install -s examples/{unxcomm,unxsendm} $RPM_BUILD_ROOT/var/nwserv/pipe
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%attr(644, root, root, 755)
+%attr(644,root,root,755)
 %doc README doc examples/{*.c,README.important}
 %dir /var/nwserv
 %dir /var/nwserv/bindery
@@ -113,16 +113,16 @@ rm -rf $RPM_BUILD_ROOT
 %dir /var/spool/nwserv/.volcache
 %dir /var/spool/nwserv/.locks
 %dir /etc/nwserv
-%attr(600, root, root) %ghost /var/log/*
-%attr(600, root, root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.conf
-%attr(600, root, root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.stations
-%attr(644, root, root) /etc/nwserv/nwserv.cnv*
-%attr(700, root, root) %config /etc/rc.d/init.d/nwserv.init
-%attr(600, root, root) %config /etc/logrotate.d/nwserv.log 
-%attr(700, root, root) %{_sbindir}/*
-%attr(644, root, root) /var/nwserv/sys/public/comm.exe
-%attr(644, root, root) /var/nwserv/sys/public/sources/*
-%attr(755, root, root) /var/nwserv/pipe/*
+%attr(600,root,root) %ghost /var/log/*
+%attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.conf
+%attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.stations
+%attr(644,root,root) /etc/nwserv/nwserv.cnv*
+%attr(700,root,root) %config /etc/rc.d/init.d/nwserv.init
+%attr(600,root,root) %config /etc/logrotate.d/nwserv.log 
+%attr(700,root,root) %{_sbindir}/*
+%attr(644,root,root) /var/nwserv/sys/public/comm.exe
+%attr(644,root,root) /var/nwserv/sys/public/sources/*
+%attr(755,root,root) /var/nwserv/pipe/*
 
 %changelog
 * Sun Nov 1 1998 Przemys³aw Czerpak <druzus@polbox.com>
