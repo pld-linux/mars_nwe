@@ -1,0 +1,147 @@
+From mstover@compu-art.de Sat Oct  7 11:23:37 2000
+Return-Path: <owner-linware@sh.cvut.cz>
+Delivered-To: epx@burns.conectiva
+Received: (qmail 14049 invoked from network); 7 Oct 2000 14:16:41 -0000
+Received: from postfix.conectiva.com.br (200.250.58.155)
+  by burns.conectiva with SMTP; 7 Oct 2000 14:16:41 -0000
+Received: by postfix.conectiva.com.br (Postfix)
+	id 020C716B4C; Sat,  7 Oct 2000 12:16:41 -0200 (BRST)
+Delivered-To: epx@conectiva.com.br
+Received: from service.sh.cvut.cz (service.sh.cvut.cz [147.32.127.214])
+	by postfix.conectiva.com.br (Postfix) with ESMTP id 69D2D16B28
+	for <epx@conectiva.com.br>; Sat,  7 Oct 2000 12:16:36 -0200 (BRST)
+Received: from klokan.sh.cvut.cz (root@klokan.sh.cvut.cz [147.32.127.208])
+	by service.sh.cvut.cz (8.9.3/8.8.8/Silicon Hill/Antispam/8.12.1999) with ESMTP id QAA17507;
+	Sat, 7 Oct 2000 16:16:15 +0200
+Received: (from daemon@localhost)
+	by klokan.sh.cvut.cz (8.9.3/8.9.3/Debian/GNU) id QAA01506;
+	Sat, 7 Oct 2000 16:16:14 +0200
+Sender: owner-linware@sh.cvut.cz
+Precedence: bulk
+Reply-To: "LinWare List" <linware@sh.cvut.cz>
+X-Info1: submissions to linware@sh.cvut.cz
+X-Info2: [Un]Subscribe requests to listserv@sh.cvut.cz
+X-Info3: example- unsubscribe linware
+X-Info4: archives at ftp://ftp.sh.cvut.cz/pub/listserv
+Received: from service.sh.cvut.cz (root@service.sh.cvut.cz [147.32.127.214])
+	by klokan.sh.cvut.cz (8.9.3/8.9.3/Debian/GNU) with ESMTP id QAA01444
+	for <linware@klokan.sh.cvut.cz>; Sat, 7 Oct 2000 16:16:11 +0200
+Received: from moutvdom00.kundenserver.de (moutvdom00.kundenserver.de [195.20.224.149])
+	by service.sh.cvut.cz (8.9.3/8.8.8/Silicon Hill/Antispam/8.12.1999) with ESMTP id QAA17495
+	for <linware@sh.cvut.cz>; Sat, 7 Oct 2000 16:16:09 +0200
+Received: from [195.20.224.208] (helo=mrvdom01.kundenserver.de)
+	by moutvdom00.kundenserver.de with esmtp (Exim 2.12 #2)
+	id 13hull-00043g-00
+	for linware@sh.cvut.cz; Sat, 7 Oct 2000 16:16:09 +0200
+Received: from [193.141.156.130] (helo=router01.compu-art.loc)
+	by mrvdom01.kundenserver.de with esmtp (Exim 2.12 #2)
+	id 13hulf-0007he-00
+	for linware@sh.cvut.cz; Sat, 7 Oct 2000 16:16:03 +0200
+Received: from server01.compu-art.loc (server01.compu-art.loc [192.168.211.101])
+	by router01.compu-art.loc (8.9.3/8.9.3) with ESMTP id QAA10212
+	for <linware@sh.cvut.cz>; Sat, 7 Oct 2000 16:14:43 +0200
+Received: (from mstover@localhost)
+	by server01.compu-art.loc (8.10.2/8.10.2) id e97ENbe25855
+	for linware@sh.cvut.cz; Sat, 7 Oct 2000 16:23:37 +0200
+Message-Id: <200010071423.e97ENbe25855@server01.compu-art.loc>
+Subject: Re: Howto hide dot-Files
+In-Reply-To: <000b01c03051$10001920$490efea9@aliebman> from Andreas Liebmann
+ at "Oct 7, 2000 01:23:01 pm"
+To: LinWare List <linware@sh.cvut.cz>
+Date: Sat, 7 Oct 2000 16:23:37 +0200 (CEST)
+Organization: COMPU-ART Systemhaus GmbH,Ludwigshafen,Germany
+Operating-System: Linux
+From: Martin Stover <mstover@compu-art.de>
+Reply-To: Martin Stover <mstover@compu-art.de>
+X-Mailer: ELM [version 2.4ME+ PL60 (25)]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Status: RO
+X-Status: O
+
+> Who knows a solution for hiding dot-files in a Home-Directory ?
+> 
+> We're using mars pl 20.
+Here is small patch against pl 20.
+If no special attrib was given by mars_nwe user (attrib.exe)
+dot-files are now hidden by default.
+
+Greetings
+
+   Martin
+
+<-------------------------- snip -------------------->
+
+diff -rub --new-file org/mars_nwe/namspace.c mars_nwe/namspace.c
+--- org/mars_nwe/namspace.c	Fri Apr 21 16:08:19 2000
++++ mars_nwe/namspace.c	Sat Oct  7 16:04:52 2000
+@@ -1,9 +1,9 @@
+-/* namspace.c 21-Apr-00 : NameSpace Services, mars_nwe */
++/* namspace.c 07-Oct-00 : NameSpace Services, mars_nwe */
+ 
+ /* !!!!!!!!!!!! NOTE !!!!!!!!!! */
+ /* Its still dirty, but it should work fairly well */
+ 
+-/* (C)opyright (C) 1993,1998  Martin Stover, Marburg, Germany
++/* (C)opyright (C) 1993,2000  Martin Stover, Marburg, Germany
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -24,7 +24,7 @@
+  *
+  * mst:21-Apr-00: fixed routine 0x57/0x18, Get Name Spaces Loaded
+  *                count_namespaces is word field, not byte.
+- *
++ * mst:07-Oct-00: fixed nw_search_file_dir()
+  *
+  */
+ 
+@@ -1750,7 +1750,9 @@
+       if (dest_entry > -1) {
+         char *funixname;
+         dest_dbe=dir_base[dest_entry];
+-        funixname = alloc_nwpath2unix(&(dbe->nwpath), 2);
++        //funixname = alloc_nwpath2unix(&(dbe->nwpath), 2);
++        /* mst:07-Oct-00 corrected */
++        funixname = alloc_nwpath2unix(&(dest_dbe->nwpath), 2);
+ 
+         (void) nwp_stat(&(dest_dbe->nwpath), "nw_search_file_dir");
+         result = build_dir_info(dest_dbe, funixname, datastream,
+diff -rub --new-file org/mars_nwe/nwattrib.c mars_nwe/nwattrib.c
+--- org/mars_nwe/nwattrib.c	Sun May 24 19:06:56 1998
++++ mars_nwe/nwattrib.c	Sat Oct  7 16:10:55 2000
+@@ -1,5 +1,5 @@
+-/* nwattrib.c 10-May-98 */
+-/* (C)opyright (C) 1998  Martin Stover, Marburg, Germany
++/* nwattrib.c 07-Oct-00 */
++/* (C)opyright (C) 1998,2000  Martin Stover, Marburg, Germany
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -18,6 +18,12 @@
+ 
+  /* Attrib routines for mars_nwe */
+ 
++/* history since 07-Oct-00
++ *
++ * mst:07-Oct-00: unix dot files are hidden as default.
++ *                
++ */
++
+ #include "net.h"
+ #include <dirent.h>
+ #include "unxfile.h"
+@@ -113,6 +119,10 @@
+   
+     if (S_ISDIR(stb->st_mode)) attrib |= FILE_ATTR_DIR;
+     else attrib &= (~FILE_ATTR_DIR);
++  } else {  /* mst: 07-Oct-00, mark unix dot files as hidden */
++    char *p = strrchr(unixname, '/');
++    if (p && *(p+1) == '.' && *(p+2) != 0 && *(p+2) != '.' ) 
++      attrib |= FILE_ATTR_H;   /* We say hidden here */
+   } 
+   
+   if (voloptions & VOL_OPTION_READONLY){
+
+

@@ -1,0 +1,119 @@
+From mstover@compu-art.de Sat Oct  7 06:10:16 2000
+Return-Path: <owner-linware@sh.cvut.cz>
+Delivered-To: epx@burns.conectiva
+Received: (qmail 5963 invoked from network); 7 Oct 2000 09:16:31 -0000
+Received: from postfix.conectiva.com.br (200.250.58.155)
+  by burns.conectiva with SMTP; 7 Oct 2000 09:16:31 -0000
+Received: by postfix.conectiva.com.br (Postfix)
+	id D3F3316B3F; Sat,  7 Oct 2000 07:16:30 -0200 (BRST)
+Delivered-To: epx@conectiva.com.br
+Received: from service.sh.cvut.cz (service.sh.cvut.cz [147.32.127.214])
+	by postfix.conectiva.com.br (Postfix) with ESMTP id B079316B3A
+	for <epx@conectiva.com.br>; Sat,  7 Oct 2000 07:16:28 -0200 (BRST)
+Received: from klokan.sh.cvut.cz (root@klokan.sh.cvut.cz [147.32.127.208])
+	by service.sh.cvut.cz (8.9.3/8.8.8/Silicon Hill/Antispam/8.12.1999) with ESMTP id LAA10103;
+	Sat, 7 Oct 2000 11:16:14 +0200
+Received: (from daemon@localhost)
+	by klokan.sh.cvut.cz (8.9.3/8.9.3/Debian/GNU) id LAA27304;
+	Sat, 7 Oct 2000 11:16:14 +0200
+Sender: owner-linware@sh.cvut.cz
+Precedence: bulk
+Reply-To: "LinWare List" <linware@sh.cvut.cz>
+X-Info1: submissions to linware@sh.cvut.cz
+X-Info2: [Un]Subscribe requests to listserv@sh.cvut.cz
+X-Info3: example- unsubscribe linware
+X-Info4: archives at ftp://ftp.sh.cvut.cz/pub/listserv
+Received: from service.sh.cvut.cz (root@service.sh.cvut.cz [147.32.127.214])
+	by klokan.sh.cvut.cz (8.9.3/8.9.3/Debian/GNU) with ESMTP id LAA27243
+	for <linware@klokan.sh.cvut.cz>; Sat, 7 Oct 2000 11:16:12 +0200
+Received: from moutvdom00.kundenserver.de (moutvdom00.kundenserver.de [195.20.224.149])
+	by service.sh.cvut.cz (8.9.3/8.8.8/Silicon Hill/Antispam/8.12.1999) with ESMTP id LAA10091
+	for <linware@sh.cvut.cz>; Sat, 7 Oct 2000 11:16:11 +0200
+Received: from [195.20.224.209] (helo=mrvdom02.schlund.de)
+	by moutvdom00.kundenserver.de with esmtp (Exim 2.12 #2)
+	id 13hq5T-00038j-00
+	for linware@sh.cvut.cz; Sat, 7 Oct 2000 11:16:11 +0200
+Received: from [193.141.156.130] (helo=router01.compu-art.loc)
+	by mrvdom02.schlund.de with esmtp (Exim 2.12 #2)
+	id 13hq5L-0004CA-00
+	for linware@sh.cvut.cz; Sat, 7 Oct 2000 11:16:03 +0200
+Received: from server01.compu-art.loc (server01.compu-art.loc [192.168.211.101])
+	by router01.compu-art.loc (8.9.3/8.9.3) with ESMTP id LAA09672
+	for <linware@sh.cvut.cz>; Sat, 7 Oct 2000 11:01:22 +0200
+Received: (from mstover@localhost)
+	by server01.compu-art.loc (8.10.2/8.10.2) id e979AGh24137
+	for linware@sh.cvut.cz; Sat, 7 Oct 2000 11:10:16 +0200
+Message-Id: <200010070910.e979AGh24137@server01.compu-art.loc>
+Subject: mars_nwe access patch
+In-Reply-To: <39DDEFB0.488076FE@ux.cegep-heritage.qc.ca> from Maurice Lafleur
+ at "Oct 6, 2000 11:28:48 am"
+To: LinWare List <linware@sh.cvut.cz>
+Date: Sat, 7 Oct 2000 11:10:16 +0200 (CEST)
+Organization: COMPU-ART Systemhaus GmbH,Ludwigshafen,Germany
+Operating-System: Linux
+From: Martin Stover <mstover@compu-art.de>
+Reply-To: Martin Stover <mstover@compu-art.de>
+X-Mailer: ELM [version 2.4ME+ PL60 (25)]
+MIME-Version: 1.0
+Content-Type: text/plain;
+  charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Status: RO
+X-Status: O
+
+here is the mars_nwe access patch.
+
+Martin
+
+< ------------------ snip ---------------------->
+
+diff -rub --new-file org/mars_nwe/trustee.c mars_nwe/trustee.c
+--- org/mars_nwe/trustee.c	Fri Sep  1 10:36:03 2000
++++ mars_nwe/trustee.c	Sat Oct  7 10:58:53 2000
+@@ -23,7 +23,9 @@
+  * mst:01-Jun-00: removed SIG_SEGV in get_eff_rights_by_trustees(), 
+  *                when stat error
+  * mst:01-Sep-00: pcz:added real unix rights patch from Przemyslaw Czerpak
+- *
++ * mst:07-Sep-00: corrected trustee rights of subdirs.
++ * mst:07-Oct-00: corrected result from tru_eff_rights_exists()
++ *                and un_nw_rights().
+  *
+  */
+ 
+@@ -101,6 +103,9 @@
+         norights |= TRUSTEE_E; /* no erase right */
+         norights |= TRUSTEE_M; /* no modify rights */
+       }
++      /* mst:07-Oct-00 */
++      if ( (!is_dir) && !(accp & R_OK) )
++        norights |= TRUSTEE_F;  /* no file scan rights */
+     }
+     
+     if (voloptions & VOL_OPTION_READONLY) {
+@@ -739,7 +744,9 @@
+ {
+   while (count--) { 
+     if (ugid_trustees->id==id) {
+-      ugid_trustees->trustee|=trustee;
++      /* ugid_trustees->trustee|=trustee;   wrong  */
++      ugid_trustees->trustee = trustee;  /* correct, mst:07-Sep-00 */
++      /* new trustees must always override the current one */
+       return(0);
+     }
+     ugid_trustees++;
+@@ -942,7 +949,13 @@
+   if ((lookfor == TRUSTEE_T) && (rights&TRUSTEE_F) ) /* mst: 13-Apr-00 */
+       return(0);
+   
+-  return(((rights & TRUSTEE_S)||((rights&lookfor)==lookfor)) ? 0 : -1);
++/*  return(((rights & TRUSTEE_S)||((rights&lookfor)==lookfor)) ? 0 : -1);*/
++  if (rights) { 
++    /* mst: 07-Oct-00, -1 as result was bad, because nw_search_file_dir()  
++     * expected the real rights.
++     */
++    return(((rights & TRUSTEE_S)||((rights&lookfor)==lookfor)) ? 0 : rights);
++  } else return(1 << 31);  // no rights
+ }
+
+
