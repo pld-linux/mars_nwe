@@ -7,7 +7,7 @@ Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	10
+Release:	11
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
@@ -29,6 +29,7 @@ Patch7:		%{name}-buffer.patch
 Patch8:		%{name}-glibc21.patch
 Patch9:		%{name}-format.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
+BuildRequires:	gdbm-devel
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	ipxutils
@@ -78,8 +79,7 @@ NetWare istemcilerinin dosya ve yazýcý sunucusu olarak kullanýlmasýný
 saðlar.
 
 %prep
-%setup0 -q -n mars_nwe
-%setup1 -q -n mars_nwe -D -T -a 1
+%setup -q -n mars_nwe -a1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -92,7 +92,13 @@ saðlar.
 %patch9 -p1
 
 %build
-%{__make}; %{__make}; %{__make} routed
+%{__make}
+%{__make} \
+	CC="%{__cc}" \
+	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_"
+%{__make} routed \
+	CC="%{__cc}" \
+	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_"
 
 cd examples
 for I in unxcomm unxsendm; do
