@@ -5,7 +5,7 @@ Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl17
-Release:	1
+Release:	2
 Copyright:	GPL
 URL:		http://www.compu-art.de/mars_nwe/index.html
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
@@ -64,7 +64,7 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{nwserv,rc.d/init.d,logrotate.d}
 install -d $RPM_BUILD_ROOT%{_sbindir}
-install -d $RPM_BUILD_ROOT/var/state/nwserv/{sys/{public/sources,login,system,mail},pipe,bindery,attrib,trustees}
+install -d $RPM_BUILD_ROOT/var/lib/nwserv/{sys/{public/sources,login,system,mail},pipe,bindery,attrib,trustees}
 install -d $RPM_BUILD_ROOT/var/{run,log,spool/nwserv/{.volcache,.locks}}
 
 install -s {nwserv,nwconn,ncpserv,nwclient,nwbind,nwrouted} $RPM_BUILD_ROOT%{_sbindir}
@@ -83,18 +83,18 @@ ln -s nwserv.cnv.437 $RPM_BUILD_ROOT/etc/nwserv/nwserv.cnv
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv.init
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/nwserv
 
-tar -xzf %{SOURCE4} -C $RPM_BUILD_ROOT/var/state/nwserv/pipe
+tar -xzf %{SOURCE4} -C $RPM_BUILD_ROOT/var/lib/nwserv/pipe
 
 for I in comm comm32; do
-	install -m644 examples/$I.exe $RPM_BUILD_ROOT/var/state/nwserv/sys/public/$I.exe
+	install -m644 examples/$I.exe $RPM_BUILD_ROOT/var/lib/nwserv/sys/public/$I.exe
 done
 
 for I in sendm comm; do
-	install -m644 examples/$I.c $RPM_BUILD_ROOT/var/state/nwserv/sys/public/sources/$I.c
+	install -m644 examples/$I.c $RPM_BUILD_ROOT/var/lib/nwserv/sys/public/sources/$I.c
 done
 
 for I in unxcomm unxsendm; do
-	install -s examples/$I $RPM_BUILD_ROOT/var/state/nwserv/pipe
+	install -s examples/$I $RPM_BUILD_ROOT/var/lib/nwserv/pipe
 done
     
 gzip -9nf README doc/* examples/README.important
@@ -111,17 +111,17 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README.gz doc examples/README.important.gz examples/*.c
-%dir /var/state/nwserv
-%dir /var/state/nwserv/bindery
-%dir /var/state/nwserv/attrib
-%dir /var/state/nwserv/trustees
-%dir /var/state/nwserv/pipe
-%dir /var/state/nwserv/sys
-%dir /var/state/nwserv/sys/public
-%dir /var/state/nwserv/sys/login
-%dir /var/state/nwserv/sys/mail
-%dir /var/state/nwserv/sys/system
-%dir /var/state/nwserv/sys/public/sources
+%dir /var/lib/nwserv
+%dir /var/lib/nwserv/bindery
+%dir /var/lib/nwserv/attrib
+%dir /var/lib/nwserv/trustees
+%dir /var/lib/nwserv/pipe
+%dir /var/lib/nwserv/sys
+%dir /var/lib/nwserv/sys/public
+%dir /var/lib/nwserv/sys/login
+%dir /var/lib/nwserv/sys/mail
+%dir /var/lib/nwserv/sys/system
+%dir /var/lib/nwserv/sys/public/sources
 %dir /var/spool/nwserv
 %dir /var/spool/nwserv/.volcache
 %dir /var/spool/nwserv/.locks
@@ -133,6 +133,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(754,root,root) %config /etc/rc.d/init.d/nwserv.init
 %attr(600,root,root) %config /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
-%attr(644,root,root) /var/state/nwserv/sys/public/comm.exe
-%attr(644,root,root) /var/state/nwserv/sys/public/sources/*
-%attr(755,root,root) /var/state/nwserv/pipe/*
+%attr(644,root,root) /var/lib/nwserv/sys/public/comm.exe
+%attr(644,root,root) /var/lib/nwserv/sys/public/sources/*
+%attr(755,root,root) /var/lib/nwserv/pipe/*
