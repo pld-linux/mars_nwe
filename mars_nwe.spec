@@ -5,7 +5,7 @@ Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	5
+Release:	6
 License:	GPL
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -23,6 +23,7 @@ Patch4:		%{name}-dotfiles.patch
 Patch5:		%{name}-trustees.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 Prereq:		rc-scripts
+Prereq:		/sbin/chkconfig
 Requires:	ipxutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -113,6 +114,9 @@ done
     
 gzip -9nf README doc/* examples/README.important
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 /sbin/chkconfig --add nwserv
 if [ -f /var/lock/subsys/nwserv ]; then
@@ -128,9 +132,6 @@ if [ "$1" = "0" ]; then
 	fi
 	/sbin/chkconfig --del nwserv
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
