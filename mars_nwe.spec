@@ -46,9 +46,9 @@ d'imoression pour des clients NetWare utilisant le protocole IPX natif
 de NetWare.
 
 %description -l pl
-MARS jest kompatyblinym z Netware serwer plików i drukarek. Pozwala
+MARS jest kompatybilnym z Netware serwer plików i drukarek. Pozwala
 stworzyæ z komputera z Linuxem serwer plików i drukarek dla klientów
-Netware, przy u¿yciu podstawowego protoko³u Netware -- IPX.
+Netware przy u¿yciu podstawowego protoko³u Netware - IPX.
 
 %description -l tr
 MARS, NetWare uyumlu bir dosya ve yazýcý sunucusudur. Bu program bir
@@ -67,11 +67,11 @@ saðlar.
 %patch5 -p1
 
 %build
-make; make; make routed
+%{__make}; %{__make}; %{__make} routed
 
 cd examples
 for I in unxcomm unxsendm; do
-	%{__cc} %{!?debug:$RPM_OPT_FLAGS}%{?debug:-O0 -g} $I.c -o $I
+	%{__cc} %{rpmcflags} $I.c -o $I
 done
 cd ..
 
@@ -92,7 +92,7 @@ install examples/nw.ini $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.conf
 for I in examples/nw.ini.cnv.*; do
 	install $I $RPM_BUILD_ROOT%{_sysconfdir}/${I##examples/nw.ini}
 done
-ln -s nwserv.cnv.437 $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.cnv
+ln -sf nwserv.cnv.437 $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.cnv
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/nwserv
