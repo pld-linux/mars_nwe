@@ -1,0 +1,31 @@
+diff -ruN mars_nwe-0.99pl20/nwcrypt.c mars_nwe-0.99pl20.new/nwcrypt.c
+--- mars_nwe-0.99pl20/nwcrypt.c	Sat Jul 13 12:52:44 1996
++++ mars_nwe-0.99pl20.new/nwcrypt.c	Mon Sep 11 13:32:54 2000
+@@ -119,8 +119,7 @@
+  0xF4,0x47,0xDC,0xA7,0xEC,0xCF,0x50,0xC0};
+ 
+ #include "nwcrypt.h"
+-
+-extern void memset(void* p, int c, int size);
++#include <string.h>
+ 
+ static void
+ shuffle1(buf32 temp, unsigned char *target)
+diff -ruN mars_nwe-0.99pl20/nwshare.c mars_nwe-0.99pl20.new/nwshare.c
+--- mars_nwe-0.99pl20/nwshare.c	Thu Jun 22 18:16:19 2000
++++ mars_nwe-0.99pl20.new/nwshare.c	Mon Sep 11 13:32:54 2000
+@@ -319,11 +319,11 @@
+ 
+ #if 0  /* mst:13-Apr-00, I think this is all NOT needed. */
+       if (entry8_flags & 0x100) { /* dos ? mode  */
+-        if ( (open_mode & 0x10) ? !(act_mode & 0x10) && (act_mode & 0x06) :
+-                                   (act_mode & 0x10) && (open_mode & 0x06))
++        if ((open_mode & 0x10) != (act_mode & 0x10))
+           result=-1;
+       } else { /* Standard Novell mode mode, i hope */
+-        if ((open_mode & 0x10) != (act_mode & 0x10))
++        if ( (open_mode & 0x10) ? !(act_mode & 0x10) && (act_mode & 0x06) :
++                                   (act_mode & 0x10) && (open_mode & 0x06))
+           result = -1;  /* if one file opened compatible then all files
+                            must be opened compatible */
+ #if 0        
