@@ -1,19 +1,21 @@
-Summary:     NetWare file/print server that runs under Linux
-Summary(de): NetWare-Datei/Druckserver unter Linux 
-Summary(fr): Serveur Netware de fichiers/impression tournant sous Linux
-Summary(pl): Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
-Summary(tr): Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
-Name:        mars_nwe
-Version:     0.99.pl12
-Release:     2
-Copyright:   GPL
-Source0:     ftp://ftp.gwdg.de/pub/linux/misc/ncpfs/mars_nwe-%{PACKAGE_VERSION}.tgz
-Source1:     mars_nwe.cnv.tgz
-Source2:     nwserv.init
-Source3:     nwserv.log
-Patch0:      mars_nwe.patch
-Group:       Networking/Daemons
-Prereq:      /sbin/chkconfig
+Summary:	NetWare file/print server that runs under Linux
+Summary(de):	NetWare-Datei/Druckserver unter Linux 
+Summary(fr):	Serveur Netware de fichiers/impression tournant sous Linux
+Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
+Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
+Name:		mars_nwe
+Version:	0.99.pl13
+Release:	2
+Copyright:	GPL
+Source0:	ftp://ftp.gwdg.de/pub/linux/misc/ncpfs/mars_nwe-%{version}.tgz
+Source1:	mars_nwe.cnv.tgz
+Source2:	nwserv.init
+Source3:	nwserv.log
+Source4:	pipefs-scripts.tgz
+Patch0:		mars_nwe-0.99.pl14.gz
+Patch1:		mars_nwe.patch
+Group:		Networking/Daemons
+Prereq:		/sbin/chkconfig
 BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
@@ -46,8 +48,8 @@ istemcilerinin dosya ve yazýcý sunucusu olarak kullanýlmasýný saðlar.
 %prep
 %setup0 -q -n mars_nwe
 %patch0 -p1
+%patch1 -p1
 %setup1 -q -n mars_nwe -D -T -a 1
-rm -rf $RPM_BUILD_ROOT
 
 %build
 make; make; make routed
@@ -62,7 +64,7 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{nwserv,rc.d/init.d,logrotate.d}
 install -d $RPM_BUILD_ROOT%{_sbindir}
-install -d $RPM_BUILD_ROOT/var/nwserv/{sys/{public/sources,login,system,mail},pipe,bindery,attrib,trustees}
+install -d $RPM_BUILD_ROOT/var/state/nwserv/{sys/{public/sources,login,system,mail},pipe,bindery,attrib,trustees}
 install -d $RPM_BUILD_ROOT/var/{run,log,spool/nwserv/{.volcache,.locks}}
 
 install -s {nwserv,nwconn,ncpserv,nwclient,nwbind,nwrouted} $RPM_BUILD_ROOT%{_sbindir}
@@ -81,10 +83,21 @@ ln -s nwserv.cnv.437 $RPM_BUILD_ROOT/etc/nwserv/nwserv.cnv
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv.init
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/nwserv.log
 
-install examples/comm.exe $RPM_BUILD_ROOT/var/nwserv/sys/public/comm.exe
-install examples/{sendm,comm}.c $RPM_BUILD_ROOT/var/nwserv/sys/public/sources/
+tar -xzf %{SOURCE4} -C $RPM_BUILD_ROOT/var/state/nwserv/pipe
 
-install -s examples/{unxcomm,unxsendm} $RPM_BUILD_ROOT/var/nwserv/pipe
+for I in comm comm32; do
+	install -m644 examples/$I.exe $RPM_BUILD_ROOT/var/state/nwserv/sys/public/$I.exe
+done
+
+for I in sendm comm; do
+	install -m644 examples/$I.c $RPM_BUILD_ROOT/var/state/nwserv/sys/public/sources/$I.c
+done
+
+for I in unxcomm unxsendm; do
+	install -s examples/$I $RPM_BUILD_ROOT/var/state/nwserv/pipe
+done
+    
+gzip -9nf README doc/* examples/README.important
 
 %post
 /sbin/chkconfig --add nwserv.init
@@ -96,19 +109,19 @@ install -s examples/{unxcomm,unxsendm} $RPM_BUILD_ROOT/var/nwserv/pipe
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%attr(644,root,root,755)
-%doc README doc examples/{*.c,README.important}
-%dir /var/nwserv
-%dir /var/nwserv/bindery
-%dir /var/nwserv/attrib
-%dir /var/nwserv/trustees
-%dir /var/nwserv/pipe
-%dir /var/nwserv/sys
-%dir /var/nwserv/sys/public
-%dir /var/nwserv/sys/login
-%dir /var/nwserv/sys/mail
-%dir /var/nwserv/sys/system
-%dir /var/nwserv/sys/public/sources
+%defattr(644,root,root,755)
+%doc README.gz doc examples/README.important.gz examples/*.c
+%dir /var/state/nwserv
+%dir /var/state/nwserv/bindery
+%dir /var/state/nwserv/attrib
+%dir /var/state/nwserv/trustees
+%dir /var/state/nwserv/pipe
+%dir /var/state/nwserv/sys
+%dir /var/state/nwserv/sys/public
+%dir /var/state/nwserv/sys/login
+%dir /var/state/nwserv/sys/mail
+%dir /var/state/nwserv/sys/system
+%dir /var/state/nwserv/sys/public/sources
 %dir /var/spool/nwserv
 %dir /var/spool/nwserv/.volcache
 %dir /var/spool/nwserv/.locks
@@ -117,9 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.conf
 %attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.stations
 %attr(644,root,root) /etc/nwserv/nwserv.cnv*
-%attr(700,root,root) %config /etc/rc.d/init.d/nwserv.init
+%attr(754,root,root) %config /etc/rc.d/init.d/nwserv.init
 %attr(600,root,root) %config /etc/logrotate.d/nwserv.log 
-%attr(700,root,root) %{_sbindir}/*
-%attr(644,root,root) /var/nwserv/sys/public/comm.exe
-%attr(644,root,root) /var/nwserv/sys/public/sources/*
-%attr(755,root,root) /var/nwserv/pipe/*
+%attr(755,root,root) %{_sbindir}/*
+%attr(644,root,root) /var/state/nwserv/sys/public/comm.exe
+%attr(644,root,root) /var/state/nwserv/sys/public/sources/*
+%attr(755,root,root) /var/state/nwserv/pipe/*
