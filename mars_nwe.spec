@@ -2,7 +2,7 @@ Summary:	NetWare file/print server that runs under Linux
 Summary(de):	NetWare-Datei/Druckserver unter Linux
 Summary(es):	Servidor de archivos e impresión NetWare que se ejecuta en Linux
 Summary(fr):	Serveur Netware de fichiers/impression tournant sous Linux
-Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
+Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuksem
 Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
@@ -63,7 +63,7 @@ de NetWare.
 
 %description -l pl
 MARS jest kompatybilnym z Netware serwer plików i drukarek. Pozwala
-stworzyæ z komputera z Linuxem serwer plików i drukarek dla klientów
+stworzyæ z komputera z Linuksem serwer plików i drukarek dla klientów
 Netware przy u¿yciu podstawowego protoko³u Netware - IPX.
 
 %description -l pt_BR
