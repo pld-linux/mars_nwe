@@ -95,12 +95,12 @@ saðlar.
 %{__make}
 %{__make} \
 	CC="%{__cc}" \
-	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_" \
+	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_ -DUSE_GDBM" \
 	NDBMLIB="-lgdbm" \
 	CRYPTLIB="-lcrypt"
 %{__make} routed \
 	CC="%{__cc}" \
-	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_" \
+	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_ -DUSE_GDBM" \
 	NDBMLIB="-lgdbm" \
 	CRYPTLIB="-lcrypt"
 
