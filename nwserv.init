@@ -23,9 +23,13 @@
 [ -f /etc/sysconfig/nwserv ] && . /etc/sysconfig/nwserv
 
 # Check that networking is up.
-if is_no "${NETWORKING}"; then
-	msg_Network_Down "MARS NetWare"
-	exit 1
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network ]; then
+		msg_network_down "MARS NetWare"
+		exit 1
+	fi
+else
+	exit 0
 fi
 
 case "$1" in
@@ -37,12 +41,12 @@ case "$1" in
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/nwserv
 	else
-		msg_Already_Running "MARS NetWare"
+		msg_already_running "MARS NetWare"
 		exit 1
 	fi
-        ;;
+	;;
   stop)
-        # Stop daemons.
+	# Stop daemons.
 	if [ -f /var/lock/subsys/nwserv ]; then
 		msg_stopping "MARS NetWare"
 		killproc nwserv
@@ -50,43 +54,39 @@ case "$1" in
 		killproc ncpserv
 		msg_stopping "MARS binder"
 		killproc nwbind
-		msg_stopping "MARS stopping all connections"
+		show "Stopping MARS: stopping all connections"
 		killproc nwconn
 		rm -f /var/lock/subsys/nwserv >/dev/null 2>&1
 	else
-		msg_Not_Running MARS NetWare
+		msg_not_running "MARS NetWare"
 		exit 1
 	fi	
-        ;;
+	;;
   restart)
-        $0 stop
+	$0 stop
 	$0 start
-        ;;
+	;;
   reload)
 	if [ -f /var/lock/subsys/nwserv ]; then
 		msg_reloading "MARS NetWare"
 		busy
 		killproc nwserv -HUP
 	else
-		msg_Not_Running "MARS NetWare"
+		msg_not_running "MARS NetWare"
 		exit 1
 	fi
 	;;
   force-reload)
 	$0 reload
 	exit $?
-
-	# or if it doesn't
-	$0 stop && $0 start
-	exit $?
 	;;
   status)
 	status nwserv
 	exit $?
-        ;;
+	;;
   *)
-	msg_Usage "$0 {start|stop|status|restart|reload|force-reload}"
-        exit 1
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	exit 1
 esac
 
 exit $RETVAL
