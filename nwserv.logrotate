@@ -1,11 +1,11 @@
 /var/log/nw.log {
-    postrotate
-	/bin/killall -HUP nwserv
-    endrotate
+	postrotate
+		/bin/killall -HUP nwserv
+	endscript
 }
 
 /var/log/nw.routes {
-    postrotate
-	/bin/killall -HUP nwserv
-    endrotate
+	postrotate
+		/bin/killall -HUP nwserv
+	endscript
 }
