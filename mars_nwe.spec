@@ -7,7 +7,7 @@ Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	9
+Release:	10
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
@@ -28,6 +28,7 @@ Patch9:		%{name}-format.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 Prereq:		rc-scripts
 Prereq:		/sbin/chkconfig
+Obsoletes:	mars-nwe
 Requires:	ipxutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
