@@ -104,9 +104,11 @@ touch $RPM_BUILD_ROOT/var/log/nw.{log,routes}
 install examples/nwserv.stations $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.stations
 
 install examples/nw.ini $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.conf
-for I in examples/nw.ini.cnv.*; do
-	install $I $RPM_BUILD_ROOT%{_sysconfdir}/${I##examples/nw.ini}
-done
+#for I in examples/nw.ini.cnv.*; do
+#	install $I $RPM_BUILD_ROOT%{_sysconfdir}/${I##examples/nw.ini}
+#done
+install examples/nw.ini.cnv.437 $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.cnv.437
+
 ln -sf nwserv.cnv.437 $RPM_BUILD_ROOT%{_sysconfdir}/nwserv.cnv
 
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv
@@ -126,7 +128,7 @@ for I in unxcomm unxsendm; do
 	install examples/$I $RPM_BUILD_ROOT/var/lib/nwserv/pipe
 done
     
-gzip -9nf README doc/* examples/README.important
+gzip -9nf README doc/* examples/{README.important,nw.ini*}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -149,7 +151,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README.gz doc examples/README.important.gz examples/*.c
+%doc README.gz doc examples/README.important.gz examples/*.c examples/nw.ini*
 %dir /var/lib/nwserv
 %dir /var/lib/nwserv/bindery
 %dir /var/lib/nwserv/attrib
