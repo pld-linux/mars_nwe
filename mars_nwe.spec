@@ -7,7 +7,7 @@ Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	8
+Release:	9
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
@@ -16,11 +16,15 @@ Source2:	nwserv.init
 Source3:	nwserv.logrotate
 Source4:	pipefs-scripts.tgz
 Patch0:		%{name}.patch
-Patch1:		%{name}-buffer.patch
-Patch2:		%{name}-glibc21.patch
-Patch3:		%{name}-format.patch
+Patch1:		%{name}-rwlck.patch
+Patch2:		%{name}-clean.patch
+Patch3:		%{name}-gcc.patch
 Patch4:		%{name}-dotfiles.patch
 Patch5:		%{name}-trustees.patch
+Patch6:		%{name}-lck.patch
+Patch7:		%{name}-buffer.patch
+Patch8:		%{name}-glibc21.patch
+Patch9:		%{name}-format.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 Prereq:		rc-scripts
 Prereq:		/sbin/chkconfig
@@ -78,6 +82,10 @@ saðlar.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
 
 %build
 %{__make}; %{__make}; %{__make} routed
