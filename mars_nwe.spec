@@ -5,7 +5,7 @@ Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	4
+Release:	5
 License:	GPL
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
