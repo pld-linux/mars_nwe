@@ -34,7 +34,7 @@ diff -urN mars_nwe.org/examples/config.h mars_nwe/examples/config.h
                                       /* full name of ini (conf) file       */
  # define PATHNAME_PROGS   "/usr/sbin" /* where to find the executables     */
 -# define PATHNAME_BINDERY "/var/nwserv/db"  /* directory for bindery-files        */
-+# define PATHNAME_BINDERY "/var/state/nwserv/bindery"  /* directory for bindery-files        */
++# define PATHNAME_BINDERY "/var/lib/nwserv/bindery"  /* directory for bindery-files        */
  #endif
  
  #define PATHNAME_PIDFILES "/var/run" /* directory for 'pidfiles'           */
@@ -69,8 +69,8 @@ diff -urN mars_nwe.org/examples/nw.ini mars_nwe/examples/nw.ini
 -
 -        1       SYS             /u3/SYS/                kt   711 600
 -
-+1	SYS		/var/state/nwserv/sys		kt	-1
-+1	PIPE		/var/state/nwserv/pipe		kp
++1	SYS		/var/lib/nwserv/sys		kt	-1
++1	PIPE		/var/lib/nwserv/pipe		kp
 +1	CDROM		/mnt/cdrom			kmnor
 +1	HOME		~				k	-1
  
@@ -136,10 +136,10 @@ diff -urN mars_nwe.org/examples/nw.ini mars_nwe/examples/nw.ini
  #
  #  45 = path for bindery file's
 -45  /var/nwserv/db
-+45  /var/state/nwserv/bindery
++45  /var/lib/nwserv/bindery
  #  46 = path for attribute handling
 -46  /var/nwserv/attrib
-+46  /var/state/nwserv/attrib
++46  /var/lib/nwserv/attrib
  #  47 = path for trustee handling
  47  /var/nwserv/trustees
  # =========================================================================
