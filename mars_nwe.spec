@@ -4,16 +4,16 @@ Summary(fr):	Serveur Netware de fichiers/impression tournant sous Linux
 Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
-Version:	0.99.pl13
-Release:	2
+Version:	0.99.pl17
+Release:	1
 Copyright:	GPL
-Source0:	ftp://ftp.gwdg.de/pub/linux/misc/ncpfs/mars_nwe-%{version}.tgz
+URL:		http://www.compu-art.de/mars_nwe/index.html
+Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
 Source1:	mars_nwe.cnv.tgz
 Source2:	nwserv.init
 Source3:	nwserv.logrotate
 Source4:	pipefs-scripts.tgz
-Patch0:		mars_nwe-0.99.pl14.gz
-Patch1:		mars_nwe.patch
+Patch0:		mars_nwe.patch
 Group:		Networking/Daemons
 Prereq:		/sbin/chkconfig
 BuildRoot:	/tmp/%{name}-%{version}-root
@@ -48,10 +48,10 @@ istemcilerinin dosya ve yazýcý sunucusu olarak kullanýlmasýný saðlar.
 %prep
 %setup0 -q -n mars_nwe
 %patch0 -p1
-%patch1 -p1
 %setup1 -q -n mars_nwe -D -T -a 1
 
 %build
+OPT="$RPM_OPT_FLAGS"; export OPT
 make; make; make routed
 
 cd examples
