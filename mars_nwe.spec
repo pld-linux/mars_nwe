@@ -135,8 +135,6 @@ for I in unxcomm unxsendm; do
 	install examples/$I $RPM_BUILD_ROOT/var/lib/nwserv/pipe
 done
 
-gzip -9nf README doc/* examples/{README.important,nw.ini*}
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -158,7 +156,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README.gz doc examples/README.important.gz examples/*.c examples/nw.ini*
+%doc README doc examples/{README.important,nw.ini*,*.c}
 %dir /var/lib/nwserv
 %dir /var/lib/nwserv/bindery
 %dir /var/lib/nwserv/attrib
