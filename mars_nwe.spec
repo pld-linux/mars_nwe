@@ -1,6 +1,6 @@
 Summary:	NetWare file/print server that runs under Linux
-Summary(de):	NetWare-Datei/Druckserver unter Linux 
-Summary(es):	Servidor de archivos e impresión NetWare que se ejecuta en Linux 
+Summary(de):	NetWare-Datei/Druckserver unter Linux
+Summary(es):	Servidor de archivos e impresión NetWare que se ejecuta en Linux
 Summary(fr):	Serveur Netware de fichiers/impression tournant sous Linux
 Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
 Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
@@ -125,7 +125,7 @@ done
 for I in unxcomm unxsendm; do
 	install examples/$I $RPM_BUILD_ROOT/var/lib/nwserv/pipe
 done
-    
+
 gzip -9nf README doc/* examples/{README.important,nw.ini*}
 
 %clean
