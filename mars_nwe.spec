@@ -4,8 +4,8 @@ Summary(fr):	Serveur Netware de fichiers/impression tournant sous Linux
 Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuxem
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
-Version:	0.99.pl17
-Release:	2
+Version:	0.99.pl20
+Release:	1
 Copyright:	GPL
 URL:		http://www.compu-art.de/mars_nwe/index.html
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
@@ -51,7 +51,7 @@ istemcilerinin dosya ve yazýcý sunucusu olarak kullanýlmasýný saðlar.
 %setup1 -q -n mars_nwe -D -T -a 1
 
 %build
-OPT="$RPM_OPT_FLAGS"; export OPT
+
 make; make; make routed
 
 cd examples
@@ -80,7 +80,7 @@ for I in examples/nw.ini.cnv.*; do
 done
 ln -s nwserv.cnv.437 $RPM_BUILD_ROOT/etc/nwserv/nwserv.cnv
 
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv.init
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/nwserv
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/nwserv
 
 tar -xzf %{SOURCE4} -C $RPM_BUILD_ROOT/var/lib/nwserv/pipe
@@ -100,10 +100,10 @@ done
 gzip -9nf README doc/* examples/README.important
 
 %post
-/sbin/chkconfig --add nwserv.init
+/sbin/chkconfig --add nwserv
 
 %postun
-/sbin/chkconfig --del nwserv.init
+/sbin/chkconfig --del nwserv
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -130,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.conf
 %attr(600,root,root) %verify(not md5 mtime) %config /etc/nwserv/nwserv.stations
 %attr(644,root,root) /etc/nwserv/nwserv.cnv*
-%attr(754,root,root) %config /etc/rc.d/init.d/nwserv.init
+%attr(754,root,root) %config /etc/rc.d/init.d/nwserv
 %attr(600,root,root) %config /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
 %attr(644,root,root) /var/lib/nwserv/sys/public/comm.exe
