@@ -7,7 +7,7 @@ Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	11
+Release:	12
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
@@ -95,10 +95,14 @@ saðlar.
 %{__make}
 %{__make} \
 	CC="%{__cc}" \
-	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_"
+	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_" \
+	NDBMLIB="-lgdbm" \
+	CRYPTLIB="-lcrypt"
 %{__make} routed \
 	CC="%{__cc}" \
-	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_"
+	RPM_OPT_FLAGS="%{rpmcflags} -D_GNU_SOURCE_" \
+	NDBMLIB="-lgdbm" \
+	CRYPTLIB="-lcrypt"
 
 cd examples
 for I in unxcomm unxsendm; do
