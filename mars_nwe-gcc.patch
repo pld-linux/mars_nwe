@@ -1,0 +1,12 @@
+diff -ruN mars_nwe/examples/mk.li mars_nwe.new/examples/mk.li
+--- mars_nwe/examples/mk.li	Sat Jan 15 06:11:20 2000
++++ mars_nwe.new/examples/mk.li	Tue Jul 10 10:18:48 2001
+@@ -40,7 +40,7 @@
+      V_VPATH=".."
+      OBJDIR="obj"
+      CC=cc
+-     CPP="cc -E"
++     CPP="cc -E -traditional"
+ #    CFLAGS="-pipe -O2 -fomit-frame-pointer"
+ #    problems gcc2.5.8 ^^^^^^^^^^^^^^^^^^^^^
+ #    CFLAGS="-pipe -Wall -Dsignal=sysv_signal"

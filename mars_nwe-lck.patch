@@ -1,0 +1,92 @@
+diff -ruN mars_nwe/nwfile.c mars_nwe.new/nwfile.c
+--- mars_nwe/nwfile.c	Thu Jun 22 18:29:09 2000
++++ mars_nwe.new/nwfile.c	Tue Jul 31 12:56:21 2001
+@@ -1017,6 +1017,9 @@
+        * the rest of the file, starting from the offset, to do this with
+        * linux, a size of 0 has to be passed to the fcntl function.
+        * ( Peter Gerhard )
++       *
++       * PCZ: 30-Jul-01
++       * offset and size conversion moved to share_lock function
+        */
+       result = share_lock( fh->st_dev, 
+                            fh->st_ino, 
+@@ -1030,14 +1033,10 @@
+                              : ( (fh->fh_flags & FH_IS_READONLY)  
+                                     ? 3  /* no exclusiv lock */
+                                     : lock_flag ),
+-
+-                             offset & 0x7fffffff,
+-
+-                           (size==MAX_U32) 
+-                             ?  0
+-                             :  size & 0x7fffffff,
+-                          
+-                           timeout);
++                           
++                           offset,
++                           size,
++                           timeout );
+               
+       XDPRINTF((4, 0,  "nw_log_phy_rec:pid=%d uid=%d flag=%2d, result=%d, fh=%d, offset=%d, size=%d, timeout=%d",
+          getpid(), geteuid(), lock_flag, result, fhandle, offset, size, timeout));
+diff -ruN mars_nwe/nwshare.c mars_nwe.new/nwshare.c
+--- mars_nwe/nwshare.c	Thu Jun 22 18:16:19 2000
++++ mars_nwe.new/nwshare.c	Thu Aug 23 02:41:16 2001
+@@ -501,6 +501,18 @@
+   sprintf(tbuf,"dev=0x%x,inode=%d,fd=%d,action=%d,lock_flag=%d",
+                 dev, inode, fd, action, lock_flag);
+ 
++#if 0
++  /* pcz: 30-Jul-01 different locking conversion from 32Bit space
++     Now it's a dirty hack only, It should be an option in nwserv.conf */
++  if (l_start & 0x80000000)
++    l_start |= 0x40000000;    /* 0x20000000 - other possible value */
++#endif
++
++  l_start &= 0x7fffffff;
++
++  if (l_len==MAX_U32) 
++    l_len = 0;
++
+   if (!_get_inode( dev, inode, &sd, &si )) {
+     XDPRINTF((1, 0, "Could not find share for lock %s", tbuf));
+     return -1;
+@@ -511,9 +523,15 @@
+   flockd.l_len    = l_len;
+ 
+   /* find lock */
++  /* pcz: 23-Aug-2001
++      1) some application remove locks using offset only and len=0
++      2) we cannot compare offset1 < offset2 + size2 because the
++	 sum can be signed (minus) eg. 0x7fffffff + 1 = 0x80000000
++	 It should be offset1 - offset2 < size2 */
+   for (psl=&si->first_lock; *psl; psl=&(*psl)->next) {
+-    if ((*psl)->l_start < l_start + l_len
+-          ||  (!l_len && (*psl)->l_start <= l_start)) {
++    if ((*psl)->l_start - l_start < l_len
++          ||  (!l_len && ( action ? (*psl)->l_start <= l_start
++	                          : (*psl)->l_start == l_start))) {
+       sl = *psl;
+       break;
+     }
+@@ -521,7 +539,9 @@
+       
+   if (!action) {
+     /* unlock */
+-    if (sl && sl->fd == fd && sl->l_start == l_start && sl->l_len == l_len) {
++    if (sl && sl->fd == fd && sl->l_start == l_start &&
++                             (sl->l_len == l_len || l_len ==0)) {
++      flockd.l_len  = sl->l_len;
+       flockd.l_type = F_UNLCK;
+       fcntl( fd, F_SETLK, &flockd );
+       *psl = sl->next;
+@@ -532,7 +552,7 @@
+     }
+   } else {
+     /* lock or test */
+-    if (sl && (l_start < sl->l_start + sl->l_len || !sl->l_len)
++    if (sl && (l_start - sl->l_start < sl->l_len || !sl->l_len)
+            && (sl->exclusive || lock_flag == 1) )
+       result = -0xfd; /* collision */
+     else {

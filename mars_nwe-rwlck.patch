@@ -1,0 +1,128 @@
+diff -ruN mars_nwe-0.99pl20/nwfile.c mars_nwe-0.99pl20.new/nwfile.c
+--- mars_nwe-0.99pl20/nwfile.c	Thu Jun 22 18:29:09 2000
++++ mars_nwe-0.99pl20.new/nwfile.c	Thu Dec  7 20:09:00 2000
+@@ -772,6 +772,7 @@
+     if (fh->fh_flags & FH_IS_PIPE_COMMAND)
+         open_pipe_command(fh, 0);
+     if (fh->fd > -1) {
++      int rw_lck; /* pcz: 07-12-00 */
+       if (fh->fh_flags & FH_IS_PIPE) { /* PIPE */
+         int readsize=size;
+ #if 1
+@@ -813,18 +814,36 @@
+         }
+ #endif
+       } else if (use_mmap && fh->p_mmap) {
+-        /* added by: Ingmar Thiemann <ingmar@gefas.com>
+-         * Netware allows no read/write on locked sections
++        /* pcz: 07-12-00
++         * there is a problem with blocking reading/writing from
++         * locked file region. Some DOS aplications uses phantom
++         * locks at very high file region (offset>0x7ffffff) to
++         * eliminate that. In POSSIX locks cannot be set at such
++         * offset so we are remaping them (offset & 0x7fffffff)
++         * this demages some database systems (locking region at
++         * 0x80000000-0x8000000f bloks reading of first 16 bytes of
++         * file) so we need an option to disable such feature as
++         * temporary solution (section 8, flags 0x100).
++         * I think we have to write our own 32bit lock system
++	 * (some samba compatible system will be realy nice for
++	 * mixed clients - who is similar to samba locks?)
+          */
+-        /* check for lock */
+-        struct flock flockd;
+-        flockd.l_type   = F_RDLCK;  /* if file is not locked exclusive
+-                                     * we should allow read it. /lenz */
+-        flockd.l_whence = SEEK_SET;
+-        flockd.l_start  = offset;
+-        flockd.l_len    = size;
+-        fcntl(fh->fd, F_GETLK, &flockd);
+-        if (flockd.l_type != F_WRLCK) {
++        rw_lck=(entry8_flags & 0x100);
++        if (!rw_lck) {
++          /* added by: Ingmar Thiemann <ingmar@gefas.com>
++           * Netware allows no read/write on locked sections
++           */
++          /* check for lock */
++          struct flock flockd;
++          flockd.l_type   = F_RDLCK;  /* if file is not locked exclusive
++                                       * we should allow read it. /lenz */
++          flockd.l_whence = SEEK_SET;
++          flockd.l_start  = offset;
++          flockd.l_len    = size;
++          fcntl(fh->fd, F_GETLK, &flockd);
++          rw_lck=(flockd.l_type != F_WRLCK);
++        }
++        if (rw_lck) {
+           while (1) {
+             if (offset < fh->size_mmap) {
+               if (size + offset > fh->size_mmap)
+@@ -849,17 +868,21 @@
+           }
+         }
+         if (fh->offd > -1L) {
+-          /* added by: Ingmar Thiemann <ingmar@gefas.com>
+-          * Netware allows no read/write on locked sections
+-          */
+-          /* check for lock */
+-          struct flock flockd;
+-          flockd.l_type   = F_WRLCK;
+-          flockd.l_whence = SEEK_SET;
+-          flockd.l_start  = offset;
+-          flockd.l_len    = size;
+-          fcntl(fh->fd, F_GETLK, &flockd);
+-          if (flockd.l_type == F_UNLCK) {
++          rw_lck=(entry8_flags & 0x100); /* pcz: 07-12-00 */
++          if (!rw_lck) {
++            /* added by: Ingmar Thiemann <ingmar@gefas.com>
++            * Netware allows no read/write on locked sections
++            */
++            /* check for lock */
++            struct flock flockd;
++            flockd.l_type   = F_WRLCK;
++            flockd.l_whence = SEEK_SET;
++            flockd.l_start  = offset;
++            flockd.l_len    = size;
++            fcntl(fh->fd, F_GETLK, &flockd);
++            rw_lck=(flockd.l_type == F_UNLCK);
++	  }
++          if (rw_lck) {
+             if ((size = read(fh->fd, data, size)) > -1) {
+               fh->offd+=(long)size;
+             } else {
+@@ -912,19 +935,22 @@
+             fh->offd = lseek(fh->fd, offset, SEEK_SET);
+         if (size) {
+           if (fh->offd > -1L) {
+-            /* added by: Ingmar Thiemann <ingmar@gefas.com>
+-             * Netware allows no read/write on locked sections
+-             */
+-            /* check for lock */
+-            struct flock flockd;
+-            flockd.l_type   = F_WRLCK;
+-            flockd.l_whence = SEEK_SET;
+-            flockd.l_start  = offset;
+-            flockd.l_len    = size;
+-            fcntl(fh->fd, F_GETLK, &flockd);
+-            if (flockd.l_type == F_UNLCK) {
+-             /*if (share_lock( fh->st_dev, fh->st_ino, fh->fd, 2, offset, size ) == 0) {*/
+-              
++            int rw_lck=(entry8_flags & 0x100); /* pcz: 07-12-00 */
++            if (!rw_lck) {
++              /* added by: Ingmar Thiemann <ingmar@gefas.com>
++               * Netware allows no read/write on locked sections
++               */
++              /* check for lock */
++              struct flock flockd;
++              flockd.l_type   = F_WRLCK;
++              flockd.l_whence = SEEK_SET;
++              flockd.l_start  = offset;
++              flockd.l_len    = size;
++              fcntl(fh->fd, F_GETLK, &flockd);
++	      rw_lck=(flockd.l_type == F_UNLCK);
++              /* rw_lck=(share_lock( fh->st_dev, fh->st_ino, fh->fd, 2, offset, size ) == 0); */
++            }
++            if (rw_lck) {
+               size = write(fh->fd, data, size);
+               fh->offd+=(long)size;
+               if (!fh->modified)
