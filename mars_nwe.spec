@@ -7,7 +7,7 @@ Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
 Summary(tr):	Linux altýnda çalýþan NetWare dosya/yazýcý sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	7
+Release:	8
 License:	GPL
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
