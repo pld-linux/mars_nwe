@@ -11,14 +11,14 @@
 # processname:	ncpserv
 # config:	/etc/nwserv/nwserv.stations
 # config:	/etc/nwserv/nwserv.conf
-# pidfile:	/var/run/nwserv.pid 
+# pidfile:	/var/run/nwserv.pid
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
 # Get network config
 . /etc/sysconfig/network
- 
+
 # Get service config - may override defaults
 [ -f /etc/sysconfig/nwserv ] && . /etc/sysconfig/nwserv
 
@@ -59,7 +59,7 @@ case "$1" in
 		rm -f /var/lock/subsys/nwserv >/dev/null 2>&1
 	else
 		msg_not_running "MARS NetWare"
-	fi	
+	fi
 	;;
   restart)
 	$0 stop
