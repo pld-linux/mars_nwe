@@ -30,9 +30,9 @@ Patch8:		%{name}-glibc21.patch
 Patch9:		%{name}-format.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 BuildRequires:	gdbm-devel
-PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	ipxutils
+Requires:	rc-scripts
 Obsoletes:	mars-nwe
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -79,7 +79,7 @@ NetWare istemcilerinin dosya ve yazýcý sunucusu olarak kullanýlmasýný
 saðlar.
 
 %prep
-%setup -q -n mars_nwe -a1
+%setup -q -n %{name} -a1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -189,7 +189,7 @@ fi
 %attr(600,root,root) %verify(not md5 mtime) %config %{_sysconfdir}/nwserv.stations
 %attr(644,root,root) %{_sysconfdir}/nwserv.cnv*
 %attr(754,root,root) %config /etc/rc.d/init.d/nwserv
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/nwserv
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
 %attr(644,root,root) /var/lib/nwserv/sys/public/comm.exe
 %attr(644,root,root) /var/lib/nwserv/sys/public/comm32.exe
