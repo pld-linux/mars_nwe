@@ -30,6 +30,7 @@ Patch8:		%{name}-glibc21.patch
 Patch9:		%{name}-format.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 BuildRequires:	gdbm-devel
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
 Requires:	ipxutils
 Requires:	rc-scripts
@@ -153,17 +154,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add nwserv
-if [ -f /var/lock/subsys/nwserv ]; then
-	/etc/rc.d/init.d/nwserv restart 1>&2
-else
-	echo "Run \"/etc/rc.d/init.d/nwserv start\" to start MARS NetWare daemon."
-fi
+%service nwserv restart "MARS NetWare daemon"
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/nwserv ]; then
-		/etc/rc.d/init.d/nwserv stop 1>&2
-	fi
+	%service nwserv stop
 	/sbin/chkconfig --del nwserv
 fi
 
