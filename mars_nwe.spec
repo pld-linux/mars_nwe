@@ -182,12 +182,12 @@ fi
 %dir %{_sysconfdir}
 %attr(600,root,root) %verify(not md5 mtime) %config %{_sysconfdir}/nwserv.conf
 %attr(600,root,root) %verify(not md5 mtime) %config %{_sysconfdir}/nwserv.stations
-%attr(644,root,root) %{_sysconfdir}/nwserv.cnv*
+%{_sysconfdir}/nwserv.cnv*
 %attr(754,root,root) %config /etc/rc.d/init.d/nwserv
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/nwserv
 %attr(755,root,root) %{_sbindir}/*
-%attr(644,root,root) /var/lib/nwserv/sys/public/comm.exe
-%attr(644,root,root) /var/lib/nwserv/sys/public/comm32.exe
-%attr(644,root,root) /var/lib/nwserv/sys/public/sources/*
+/var/lib/nwserv/sys/public/comm.exe
+/var/lib/nwserv/sys/public/comm32.exe
+/var/lib/nwserv/sys/public/sources/*
 %attr(755,root,root) /var/lib/nwserv/pipe/*
 %attr(600,root,root) %ghost /var/log/*
