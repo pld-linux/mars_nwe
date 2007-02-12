@@ -1,10 +1,10 @@
 Summary:	NetWare file/print server that runs under Linux
-Summary(de):	NetWare-Datei/Druckserver unter Linux
-Summary(es):	Servidor de archivos e impresión NetWare que se ejecuta en Linux
-Summary(fr):	Serveur Netware de fichiers/impression tournant sous Linux
-Summary(pl):	Serwer Netware plików/drukarek dzia³aj±cy pod Linuksem
-Summary(pt_BR):	Servidor de arquivos e impressão NetWare que roda no Linux
-Summary(tr):	Linux altında çalışan NetWare dosya/yazıcı sunucusu
+Summary(de.UTF-8):   NetWare-Datei/Druckserver unter Linux
+Summary(es.UTF-8):   Servidor de archivos e impresiÃ³n NetWare que se ejecuta en Linux
+Summary(fr.UTF-8):   Serveur Netware de fichiers/impression tournant sous Linux
+Summary(pl.UTF-8):   Serwer Netware plikÃ³w/drukarek dziaÅ‚ajÄ…cy pod Linuksem
+Summary(pt_BR.UTF-8):   Servidor de arquivos e impressÃ£o NetWare que roda no Linux
+Summary(tr.UTF-8):   Linux altÄ±nda Ã§alÄ±ÅŸan NetWare dosya/yazÄ±cÄ± sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
 Release:	12
@@ -44,40 +44,40 @@ MARS is a NetWare compatible file and printer server. It lets you use
 a Linux machine as a file and print server for NetWare based clients
 using NetWare's native IPX protocol suite.
 
-%description -l de
+%description -l de.UTF-8
 MARS ist ein NetWare-kompatibler Datei- und Druckerserver. Er
 gestattet die Verwendung eines Linux-Rechners als ein Datei- und
-Druckserver für NetWare-basierende Clients unter Verwendung der
+Druckserver fÃ¼r NetWare-basierende Clients unter Verwendung der
 NetWare-eigenen IPX-Protokollserie.
 
-%description -l es
-MARS es un servidor de archivo y impresión compatible con NetWare.
-Deja que uses una máquina Linux como un servidor de archivo y
-impresión para clientes de NetWare usando el protocolo nativo IPX
+%description -l es.UTF-8
+MARS es un servidor de archivo y impresiÃ³n compatible con NetWare.
+Deja que uses una mÃ¡quina Linux como un servidor de archivo y
+impresiÃ³n para clientes de NetWare usando el protocolo nativo IPX
 NetWare.
 
-%description -l fr
+%description -l fr.UTF-8
 MARS est un serveur de fichiers et d'impression compatible NetWare. Il
 permet d'utiliser une machine Linux comme serveur de fichiers et
 d'imoression pour des clients NetWare utilisant le protocole IPX natif
 de NetWare.
 
-%description -l pl
-MARS jest kompatybilnym z Netware serwer plików i drukarek. Pozwala
-stworzyæ z komputera z Linuksem serwer plików i drukarek dla klientów
-Netware przy u¿yciu podstawowego protoko³u Netware - IPX.
+%description -l pl.UTF-8
+MARS jest kompatybilnym z Netware serwer plikÃ³w i drukarek. Pozwala
+stworzyÄ‡ z komputera z Linuksem serwer plikÃ³w i drukarek dla klientÃ³w
+Netware przy uÅ¼yciu podstawowego protokoÅ‚u Netware - IPX.
 
-%description -l pt_BR
-MARS é um servidor de arquivo e impressão compatível com NetWare. Ele
-deixa você usar uma máquina Linux como um servidor de arquivo e
-impressão para clientes de NetWare usando o protocolo nativo IPX
+%description -l pt_BR.UTF-8
+MARS Ã© um servidor de arquivo e impressÃ£o compatÃ­vel com NetWare. Ele
+deixa vocÃª usar uma mÃ¡quina Linux como um servidor de arquivo e
+impressÃ£o para clientes de NetWare usando o protocolo nativo IPX
 NetWare.
 
-%description -l tr
-MARS, NetWare uyumlu bir dosya ve yazıcı sunucusudur. Bu program bir
-Linux makinenin, NetWare in doğal IPX protokol takımını kullanan
-NetWare istemcilerinin dosya ve yazıcı sunucusu olarak kullanılmasını
-sağlar.
+%description -l tr.UTF-8
+MARS, NetWare uyumlu bir dosya ve yazÄ±cÄ± sunucusudur. Bu program bir
+Linux makinenin, NetWare in doÄŸal IPX protokol takÄ±mÄ±nÄ± kullanan
+NetWare istemcilerinin dosya ve yazÄ±cÄ± sunucusu olarak kullanÄ±lmasÄ±nÄ±
+saÄŸlar.
 
 %prep
 %setup -q -n %{name} -a1
