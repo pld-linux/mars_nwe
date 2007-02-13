@@ -1,10 +1,10 @@
 Summary:	NetWare file/print server that runs under Linux
-Summary(de.UTF-8):   NetWare-Datei/Druckserver unter Linux
-Summary(es.UTF-8):   Servidor de archivos e impresión NetWare que se ejecuta en Linux
-Summary(fr.UTF-8):   Serveur Netware de fichiers/impression tournant sous Linux
-Summary(pl.UTF-8):   Serwer Netware plików/drukarek działający pod Linuksem
-Summary(pt_BR.UTF-8):   Servidor de arquivos e impressão NetWare que roda no Linux
-Summary(tr.UTF-8):   Linux altında çalışan NetWare dosya/yazıcı sunucusu
+Summary(de.UTF-8):	NetWare-Datei/Druckserver unter Linux
+Summary(es.UTF-8):	Servidor de archivos e impresión NetWare que se ejecuta en Linux
+Summary(fr.UTF-8):	Serveur Netware de fichiers/impression tournant sous Linux
+Summary(pl.UTF-8):	Serwer Netware plików/drukarek działający pod Linuksem
+Summary(pt_BR.UTF-8):	Servidor de arquivos e impressão NetWare que roda no Linux
+Summary(tr.UTF-8):	Linux altında çalışan NetWare dosya/yazıcı sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
 Release:	12
