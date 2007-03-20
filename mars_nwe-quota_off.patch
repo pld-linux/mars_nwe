@@ -1,0 +1,12 @@
+diff -Nur mars_nwe.orig/examples/config.h mars_nwe.chng/examples/config.h
+--- mars_nwe.orig/examples/config.h	2007-03-20 11:55:22.000000000 +0100
++++ mars_nwe.chng/examples/config.h	2007-03-20 12:33:20.000000000 +0100
+@@ -83,7 +83,7 @@
+ #define INTERNAL_RIP_SAP    1        /* use internal/own rip/sap routines  */
+ 
+ #define SHADOW_PWD          1        /* change to '1' for shadow passwds   */
+-#define QUOTA_SUPPORT       1        /* change to '1' for quota support    */
++#define QUOTA_SUPPORT       0        /* change to '1' for quota support    */
+ 
+ /* for sending 'Request being serviced' replys, /lenz */
+ #define CALL_NWCONN_OVER_SOCKET  0 

@@ -1,0 +1,12 @@
+diff -Nur mars_nwe.orig/tools.h mars_nwe.chng/tools.h
+--- mars_nwe.orig/tools.h	2000-04-18 19:17:57.000000000 +0200
++++ mars_nwe.chng/tools.h	2007-03-20 11:58:40.000000000 +0100
+@@ -27,7 +27,7 @@
+ #define NWBIND    5
+ #define NWROUTED  6
+ 
+-extern  FILE *logfile;
++/* extern  FILE *logfile; */
+ extern  void x_x_xfree(char **p);
+ extern  int x_x_xnewstr(uint8 **p,  uint8 *s);
+ 
