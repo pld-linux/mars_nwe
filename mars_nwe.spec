@@ -14,7 +14,7 @@ Version:	0.99.pl20
 Release:	13
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.compu-art.de/%{name}/%{name}-%{version}.tgz
+Source0:	http://www.compu-art.de/mars_nwe/%{name}-%{version}.tgz
 # Source0-md5:	98b3bf022233035ce12a834c689605e5
 Source1:	%{name}.cnv.tgz
 # Source1-md5:	00add1da5f8e624c5c1d8d1b3351616a
