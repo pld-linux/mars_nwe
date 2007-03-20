@@ -1,3 +1,7 @@
+
+# TODO:
+# - support for new incompatibile quota version
+
 Summary:	NetWare file/print server that runs under Linux
 Summary(de.UTF-8):	NetWare-Datei/Druckserver unter Linux
 Summary(es.UTF-8):	Servidor de archivos e impresión NetWare que se ejecuta en Linux
@@ -7,10 +11,10 @@ Summary(pt_BR.UTF-8):	Servidor de arquivos e impressão NetWare que roda no Linu
 Summary(tr.UTF-8):	Linux altında çalışan NetWare dosya/yazıcı sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	12
+Release:	13
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.compu-art.de/download/%{name}-%{version}.tgz
+Source0:	http://www.compu-art.de/%{name}/%{name}-%{version}.tgz
 # Source0-md5:	98b3bf022233035ce12a834c689605e5
 Source1:	%{name}.cnv.tgz
 # Source1-md5:	00add1da5f8e624c5c1d8d1b3351616a
@@ -28,6 +32,8 @@ Patch6:		%{name}-lck.patch
 Patch7:		%{name}-buffer.patch
 Patch8:		%{name}-glibc21.patch
 Patch9:		%{name}-format.patch
+Patch10:	%{name}-gcc4.patch
+Patch11:	%{name}-quota_off.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 BuildRequires:	gdbm-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -91,6 +97,8 @@ sağlar.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
 
 %build
 %{__make}
