@@ -103,9 +103,9 @@ sağlar.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-if [ "%{_lib}" != "lib" ] ; then
+%if "%{_lib}" == "lib64"
 %patch13
-fi
+%endif
 %patch14 -p1
 
 %build
