@@ -1,0 +1,13 @@
+diff -Nur mars_nwe.orig/emutli.h mars_nwe.chng/emutli.h
+--- mars_nwe.orig/emutli.h	2007-06-15 22:22:35.000000000 +0200
++++ mars_nwe.chng/emutli.h	2007-06-15 22:23:47.000000000 +0200
+@@ -40,7 +40,8 @@
+ 
+ typedef unsigned char       uint8;
+ typedef unsigned short int uint16;
+-typedef unsigned long  int uint32;
++/* typedef unsigned long  int uint32; */
++typedef unsigned int uint32;
+ 
+ #define IPX_NET_SIZE    4
+ #define IPX_NODE_SIZE   6

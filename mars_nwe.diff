@@ -1,0 +1,130 @@
+--- mars_nwe/emutli.h
++++ mars_nwe/emutli.h
+@@ -35,11 +35,7 @@
+ #else
+ # include <linux/types.h>
+ # include <netinet/in.h>
+-# ifdef _GNU_SOURCE_
+-#  include <netipx/ipx.h>
+-# else
+-#  include <linux/ipx.h>
+-# endif
++# include <netipx/ipx.h>
+ #endif
+ 
+ typedef unsigned char       uint8;
+--- mars_nwe/examples/mk.li
++++ mars_nwe/examples/mk.li
+@@ -44,7 +44,7 @@
+ #    CFLAGS="-pipe -O2 -fomit-frame-pointer"
+ #    problems gcc2.5.8 ^^^^^^^^^^^^^^^^^^^^^
+ #    CFLAGS="-pipe -Wall -Dsignal=sysv_signal"
+-     CFLAGS="$RPM_OPT_FLAGS -pipe -Wall -D_GNU_SOURCE"
++     CFLAGS="$RPM_OPT_FLAGS -pipe -Wall -D_GNU_SOURCE -fno-strict-aliasing"
+ 
+   case $MASCHINE in
+     sparc)
+@@ -55,13 +55,14 @@
+       ;;
+   esac
+ 
+-if   [ -f /usr/lib/libgdbm.a ] || [ -f /usr/lib/libgdbm.so ] ; then
+-     NDBMLIB="-lgdbm"
++LIBDIR=/usr/lib
++if   [ -f $LIBDIR/libgdbm.a ] || [ -f $LIBDIR/libgdbm.so ] ; then
++    NDBMLIB="-lgdbm"
+ else
+-     NDBMLIB="-ldbm"
++    NDBMLIB="-ldbm"
+ fi
+      
+-if   [ -f /usr/lib/libcrypt.so ] ; then
++if   [ -f $LIBDIR/libcrypt.so ] ; then
+      CRYPTLIB="-lcrypt"
+ else
+      CRYPTLIB=""
+--- mars_nwe/examples/nw.ini
++++ mars_nwe/examples/nw.ini
+@@ -310,7 +310,7 @@
+ 
+ 
+         4   0x22    eth0    ethernet_ii  1
+-        4   0x0     *       AUTO         1
++#        4   0x0     *       AUTO         1
+ 
+ # Section 5: special device flags
+ # =========================================================================
+@@ -845,7 +845,7 @@
+ 
+ # Sections 210,211: timing
+ 
+-210     10              # 1 .. 600  (default 10) seconds after server
++210     5               # 1 .. 600  (default 10) seconds after server
+                         # really goes down after a down command
+ 211     60              # 10 .. 600 (default 60) broadcasts every x seconds
+ 
+--- mars_nwe/makefile.unx
++++ mars_nwe/makefile.unx
+@@ -66,7 +66,7 @@
+ $(DESTMAKEFILE): $(VPATH)/makefile.unx $(VPATH)/config.h
+ 	rm -f $@
+ 	cp $(VPATH)/makefile.unx makefile.c
+-	$(CPP) $(HOSTCFLAGS) -I$(VPATH) makefile.c > $@
++	$(CPP) $(HOSTCFLAGS) -I$(VPATH) makefile.c | unexpand -t 1 > $@
+ 	rm -f makefile.c
+ #endif
+ 
+--- mars_nwe/net.h
++++ mars_nwe/net.h
+@@ -171,11 +171,11 @@
+ #endif
+ 
+ #ifndef MAX_CONNECTIONS
+-# define MAX_CONNECTIONS  5 /* maximum Number of connections */
++# define MAX_CONNECTIONS  50 /* maximum Number of connections */
+ #endif
+ 
+ #ifndef MAX_NW_VOLS
+-# define MAX_NW_VOLS     10 /* maximum Number of volumes */
++# define MAX_NW_VOLS     20 /* maximum Number of volumes */
+ #endif
+ 
+ #ifndef MAX_FILE_HANDLES_CONN
+--- mars_nwe/tools.c
++++ mars_nwe/tools.c
+@@ -51,7 +51,7 @@
+ int    act_connection=0;  /* which connection (nwconn, nwbind) */
+ time_t act_time=0L;       /* actual time */
+ 
+-static FILE *logfile=NULL;
++FILE *logfile=NULL;
+ static int   use_syslog=0; /* 1 = use syslog for all loggings
+                             * 2 = only for errors
+                             */
+@@ -160,6 +160,7 @@
+   va_list ap;
+ static char *buffered=NULL;
+   int errnum      = errno;
++  if (!logfile) logfile = stderr;
+   if (nw_debug >= dlevel) {
+     if (use_syslog==1) {
+       char *buf;
+@@ -227,6 +228,10 @@
+   FILE *lologfile = logfile;
+   char errbuf[200];
+   const char *errstr = errbuf;
++  if (!logfile) {
++    lologfile = stderr;
++    logfile = stderr;
++  }
+   if (mode > 9) {
+     errnum = -1;
+     mode  -= 10;
+@@ -277,6 +282,7 @@
+   char *fname=FILENAME_NW_INI;
+   FILE *f=fopen(fname, "r");
+   int uid=geteuid();
++  if (!logfile) logfile = stderr;
+   if (f == (FILE*)NULL && uid > 0) {
+     seteuid(0);
+     f=fopen(fname, "r");

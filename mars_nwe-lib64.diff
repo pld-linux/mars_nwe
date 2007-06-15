@@ -1,0 +1,11 @@
+--- examples/mk.li
++++ examples/mk.li
+@@ -55,7 +55,7 @@
+       ;;
+   esac
+ 
+-LIBDIR=/usr/lib
++LIBDIR=/usr/lib64
+ if   [ -f $LIBDIR/libgdbm.a ] || [ -f $LIBDIR/libgdbm.so ] ; then
+     NDBMLIB="-lgdbm"
+ else
