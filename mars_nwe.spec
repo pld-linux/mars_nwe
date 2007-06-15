@@ -11,7 +11,7 @@ Summary(pt_BR.UTF-8):	Servidor de arquivos e impressão NetWare que roda no Linu
 Summary(tr.UTF-8):	Linux altında çalışan NetWare dosya/yazıcı sunucusu
 Name:		mars_nwe
 Version:	0.99.pl20
-Release:	13
+Release:	14
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.compu-art.de/mars_nwe/%{name}-%{version}.tgz
@@ -34,6 +34,9 @@ Patch8:		%{name}-glibc21.patch
 Patch9:		%{name}-format.patch
 Patch10:	%{name}-gcc4.patch
 Patch11:	%{name}-quota_off.patch
+Patch12:	%{name}.diff
+Patch13:	%{name}-lib64.diff
+Patch14:	%{name}-uint32.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 BuildRequires:	gdbm-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -99,6 +102,11 @@ sağlar.
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
+if [ "%{_lib}" != "lib" ] ; then
+%patch13
+fi
+%patch14 -p1
 
 %build
 %{__make}
