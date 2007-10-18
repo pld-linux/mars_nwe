@@ -1,0 +1,19 @@
+diff -Nur mars_nwe.orig/namspace.c mars_nwe.chng/namspace.c
+--- mars_nwe.orig/namspace.c	2007-10-18 11:52:02.000000000 +0200
++++ mars_nwe.chng/namspace.c	2007-10-18 12:00:49.000000000 +0200
+@@ -1867,6 +1867,15 @@
+ #endif
+           creatmode = 1;
+         }
++        
++        /*
++         * 18/10/2007 - pascalek (pascalek@pld-linux.org):
++         * 	If file is opened just in truncate mode (at least windows XP Client is
++         *	affected) its opencreatemode equals 0x2. Opening it with creatmode == 0
++         *	corrupt files.
++         */
++        if (opencreatmode == 0x2)
++        	creatmode = 1;
+ 
+         if ((result = file_creat_open(dbe->nwpath.volume,
+               nwpath_2_unix(&dbe->nwpath, 2), &(dbe->nwpath.statb),
