@@ -38,6 +38,7 @@ Patch12:	%{name}.diff
 Patch13:	%{name}-lib64.diff
 Patch14:	%{name}-uint32.patch
 Patch15:	%{name}-truncate.patch
+Patch16:	%{name}-delete.patch
 URL:		http://www.compu-art.de/mars_nwe/index.html
 BuildRequires:	gdbm-devel
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -109,6 +110,7 @@ sağlar.
 %endif
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 %build
 %{__make}
