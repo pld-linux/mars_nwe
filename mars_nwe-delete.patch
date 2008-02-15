@@ -1,0 +1,23 @@
+diff -Nur mars_nwe.orig/namspace.c mars_nwe.chng/namspace.c
+--- mars_nwe.orig/namspace.c	2008-02-12 11:42:30.000000000 +0100
++++ mars_nwe.chng/namspace.c	2008-02-15 10:55:45.000000000 +0100
+@@ -2049,9 +2049,18 @@
+     DIR_BASE_ENTRY *dbe=dir_base[result];
+     if (get_volume_options(dbe->nwpath.volume) &
+        VOL_OPTION_READONLY) result = -0x8a;
+-    else result=func_search_entry(dbe, namespace,
++    else {
++       result=func_search_entry(dbe, namespace,
+           search_entry, strlen(search_entry), searchattrib,
+           delete_file_dir, NULL);
++       /* ncpfs deletes file with file handle and NAME_DOS so we have 
++          to try NAME_OS2 too while deleting files */
++       if ((result == -255) && (namespace == NAME_DOS)) {
++          result=func_search_entry(dbe, NAME_OS2,
++             search_entry, strlen(search_entry), searchattrib,
++             delete_file_dir, NULL);
++       }
++    }
+   }
+   return(result);
+ }
